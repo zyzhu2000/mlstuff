@@ -61,7 +61,7 @@ if 0:
     print(y_train_accuracy, y_test_accuracy)
 
 
-if 1:
+if 0:
     
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [120], activation = 'relu', 
@@ -84,7 +84,7 @@ if 1:
     
     print(y_train_accuracy, y_test_accuracy)
 
-if 0:
+if 1:
     
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [120], activation = 'relu', 
