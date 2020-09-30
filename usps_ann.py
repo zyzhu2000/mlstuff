@@ -99,8 +99,8 @@ if mode=='sa':
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [120], activation = 'relu', 
                                      algorithm = 'simulated_annealing', 
-                                     max_iters = 10000, bias = True, is_classifier = True, clip_max=3,
-                                     learning_rate = 0.15, restarts=10, early_stopping = True, 
+                                     max_iters = 15000, bias = True, is_classifier = True, clip_max=3,
+                                     learning_rate = 0.2, restarts=10, early_stopping = True, 
                                       max_attempts = 100, random_state = 3, curve=True)
     nn_model2.fit(X_train, y_train, init_weights=init_weights)
     

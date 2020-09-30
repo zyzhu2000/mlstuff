@@ -14,6 +14,7 @@ from  classifiers import *
 from ann import *
 from credit_default import CreditDefault_ANN
 import mlrose_hiive as mr
+from mlrose_hiive.algorithms.decay import GeomDecay
 
 with open('ann.pkl', 'rb') as f:
     model = pkl.load(f)
@@ -77,11 +78,12 @@ if 0:
     
     print(y_train_accuracy, y_test_accuracy)
 
-if 0:
+if 1:
     
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [6], activation = 'relu', 
                                      algorithm = 'simulated_annealing', 
+                                     schedule=GeomDecay(0.001,min_temp=0.00),
                                      max_iters = 1500, bias = True, is_classifier = True, 
                                      learning_rate = 0.15, restarts=10, early_stopping = True, 
                                       max_attempts = 100, random_state = 3, curve=True)
