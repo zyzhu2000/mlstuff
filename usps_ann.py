@@ -72,7 +72,7 @@ if mode=='rhc':
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [120], activation = 'relu', 
                                      algorithm = 'random_hill_climb', 
-                                     max_iters = 4000, bias = True, is_classifier = True, 
+                                     max_iters = 20000, bias = True, is_classifier = True, 
                                      learning_rate = 0.15, restarts=10, early_stopping = True, clip_max=3, 
                                       max_attempts = 100, random_state = 3, curve=True)
     nn_model2.fit(X_train, y_train, init_weights=init_weights)
@@ -99,7 +99,7 @@ if mode=='sa':
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [120], activation = 'relu', 
                                      algorithm = 'simulated_annealing', 
-                                     max_iters = 15000, bias = True, is_classifier = True, clip_max=3,
+                                     max_iters = 20000, bias = True, is_classifier = True, clip_max=3,
                                      learning_rate = 0.2, restarts=10, early_stopping = True, 
                                       max_attempts = 100, random_state = 3, curve=True)
     nn_model2.fit(X_train, y_train, init_weights=init_weights)
@@ -126,7 +126,7 @@ if mode=='ga':
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [120], activation = 'relu', 
                                      algorithm = 'genetic_alg', 
                                      max_iters = 200, bias = True, is_classifier = True, 
-                                     learning_rate = 1e-6,  early_stopping = True, pop_size=200, clip_max=10,
+                                     learning_rate = 1e-6,  early_stopping = True, pop_size=500, clip_max=2,
                                       max_attempts = 20, random_state = 3, curve=True)
     nn_model2.fit(X_train, y_train)
     

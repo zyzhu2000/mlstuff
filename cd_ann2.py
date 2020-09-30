@@ -84,10 +84,10 @@ if 1:
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [6], activation = 'relu', 
                                      algorithm = 'simulated_annealing', 
                                      schedule=GeomDecay(0.001,min_temp=0.00),
-                                     max_iters = 1500, bias = True, is_classifier = True, 
+                                     max_iters = 3000, bias = True, is_classifier = True, 
                                      learning_rate = 0.15, restarts=10, early_stopping = True, 
                                       max_attempts = 100, random_state = 3, curve=True)
-    nn_model2.fit(X_train, y_train, init_weights=init_weights)
+    nn_model2.fit(X_train, y_train)#, init_weights=init_weights)
     
     # Predict labels for train set and assess accuracy
     y_train_pred = nn_model2.predict(X_train)
