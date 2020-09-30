@@ -126,7 +126,7 @@ if mode=='ga':
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [120], activation = 'relu', 
                                      algorithm = 'genetic_alg', 
                                      max_iters = 200, bias = True, is_classifier = True, 
-                                     learning_rate = 1e-6,  early_stopping = True, pop_size=200, clip_max=3,
+                                     learning_rate = 1e-6,  early_stopping = True, pop_size=200, clip_max=10,
                                       max_attempts = 20, random_state = 3, curve=True)
     nn_model2.fit(X_train, y_train)
     
