@@ -1,3 +1,4 @@
+import sys
 from sklearn.model_selection import KFold
 import itertools, time, datetime
 from joblib import Parallel, delayed
@@ -6,7 +7,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_selection import SelectFromModel
 from sklearn.metrics import f1_score
 import sklearn.base
-import imblearn as im
 from sklearn import tree
 import pickle as pkl
 
@@ -14,6 +14,10 @@ from  classifiers import *
 from ann import *
 from credit_default import CreditDefault_ANN
 import mlrose_hiive as mr
+
+interactive = 0
+
+mode = sys.argv[1]
 
 with open('usps_ann.pkl', 'rb') as fh:
     model = pkl.load(fh)    
@@ -38,7 +42,7 @@ def xavier_init(n1, n2):
 
 init_weights  = np.concatenate([xavier_init((X_train.shape[1]+1), 120), xavier_init(120, 10)])
 
-if 0:
+if mode=='gc':
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [120], activation = 'relu', 
                                      algorithm = 'gradient_descent', 
@@ -52,7 +56,9 @@ if 0:
     
     y_train_accuracy = f1_score(y_train, y_train_pred, average="macro")
     plt.plot(nn_model2.fitness_curve)
-    plt.show()
+    plt.savefig('gc.png')
+    if interactive:
+        plt.show()
     
     y_test_pred = nn_model2.predict(X_test)
     
@@ -61,7 +67,7 @@ if 0:
     print(y_train_accuracy, y_test_accuracy)
 
 
-if 0:
+if mode=='rhc':
     
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [120], activation = 'relu', 
@@ -76,15 +82,19 @@ if 0:
     
     y_train_accuracy = f1_score(y_train, y_train_pred, average="macro")
     plt.plot(nn_model2.fitness_curve)
-    plt.show()
+    plt.savefig('rhc.png')
+    if interactive:
+        plt.show()
+
     
     y_test_pred = nn_model2.predict(X_test)
     
     y_test_accuracy = f1_score(y_test, y_test_pred, average="macro")
     
     print(y_train_accuracy, y_test_accuracy)
+    
 
-if 1:
+if mode=='sa':
     
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [120], activation = 'relu', 
@@ -99,7 +109,10 @@ if 1:
     
     y_train_accuracy = f1_score(y_train, y_train_pred, average="macro")
     plt.plot(nn_model2.fitness_curve)
-    plt.show()
+    plt.savefig('sa.png')
+    if interactive:
+        plt.show()
+
     
     y_test_pred = nn_model2.predict(X_test)
     
@@ -107,7 +120,7 @@ if 1:
     
     print(y_train_accuracy, y_test_accuracy)
 
-if 0:
+if mode=='ga':
     
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [120], activation = 'relu', 
@@ -122,7 +135,10 @@ if 0:
     
     y_train_accuracy = f1_score(y_train, y_train_pred, average="macro")
     plt.plot(nn_model2.fitness_curve)
-    plt.show()
+    plt.savefig('ga.png')
+    if interactive:
+        plt.show()
+
     
     y_test_pred = nn_model2.predict(X_test)
     
