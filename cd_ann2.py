@@ -83,10 +83,10 @@ if 1:
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [6], activation = 'relu', 
                                      algorithm = 'simulated_annealing', 
-                                     schedule=GeomDecay(0.001,min_temp=0.00),
-                                     max_iters = 3000, bias = True, is_classifier = True, 
-                                     learning_rate = 0.15, restarts=10, early_stopping = True, 
-                                      max_attempts = 100, random_state = 3, curve=True)
+                                     schedule=GeomDecay(0.5,min_temp=0.0001, decay=0.99),
+                                     max_iters = 5000, bias = True, is_classifier = True, 
+                                     learning_rate = 0.3, restarts=10, early_stopping = True, 
+                                      max_attempts = 100, random_state = 8, curve=True)
     nn_model2.fit(X_train, y_train)#, init_weights=init_weights)
     
     # Predict labels for train set and assess accuracy
