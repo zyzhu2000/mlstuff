@@ -12,7 +12,7 @@ from mlrose_hiive.decorators import short_name
 @short_name('rhc')
 def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
                       init_state=None, curve=False, random_state=None,
-                      state_fitness_callback=None, callback_user_info=None):
+                      state_fitness_callback=None, callback_user_info=None, argmax_mode=False):
     """Use randomized hill climbing to find the optimum for a given
     optimization problem.
     Parameters
@@ -76,6 +76,9 @@ def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
     # Set random seed
     if isinstance(random_state, int) and random_state > 0:
         np.random.seed(random_state)
+    
+    if argmax_mode:
+        max_attempts = 1
 
     best_fitness = -np.inf
     best_state = None
@@ -102,11 +105,18 @@ def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
 
         attempts = 0
         iters = 0
+        #ii = 0
+        #l_att = []
         while (attempts < max_attempts) and (iters < max_iters):
             iters += 1
+            
+            if argmax_mode:
+                problem.find_neighbors()
+                next_state = problem.best_neighbor()
+            else:
+                # Find random neighbor and evaluate fitness
+                next_state = problem.random_neighbor()
 
-            # Find random neighbor and evaluate fitness
-            next_state = problem.random_neighbor()
             next_fitness = problem.eval_fitness(next_state)
 
             # If best neighbor is an improvement,
@@ -115,7 +125,12 @@ def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
             if next_fitness > current_fitness:
                 problem.set_state(next_state)
                 attempts = 0
+                #ii = 0
+                #l_att = [problem.get_state()]
             else:
+                #if next_fitness==current_fitness:
+                #    ii +=1
+                #l_att.append(next_state)
                 attempts += 1
 
             if curve:

@@ -93,6 +93,8 @@ def simulated_annealing(problem, schedule=GeomDecay(), max_attempts=10,
     attempts = 0
     iters = 0
     continue_iterating = True
+    
+    ll = []
 
     while (attempts < max_attempts) and (iters < max_iters):
         temp = schedule.evaluate(iters)
@@ -105,6 +107,7 @@ def simulated_annealing(problem, schedule=GeomDecay(), max_attempts=10,
             # Find random neighbor and evaluate fitness
             next_state = problem.random_neighbor()
             next_fitness = problem.eval_fitness(next_state)
+            
 
             # Calculate delta E and change prob
             current_fitness = problem.get_fitness()
@@ -115,6 +118,7 @@ def simulated_annealing(problem, schedule=GeomDecay(), max_attempts=10,
             # than prob, move to that state and reset attempts counter
             if (delta_e > 0) or (np.random.uniform() < prob):
                 problem.set_state(next_state)
+                #ll.append((next_state, next_fitness, temp))
                 attempts = 0
             else:
                 attempts += 1

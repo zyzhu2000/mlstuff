@@ -19,7 +19,7 @@ def fn_fitness(state:np.ndarray):
     if all(x1==0):
         v = np.sum(1-x2) + 1
     else:
-        v = np.sum(x2)
+        v = np.sum(x2) 
     
     return float(v)
 
@@ -46,25 +46,25 @@ fitness_cust = mr.CustomFitness(fn_fitness)
 problem_cust = mr.DiscreteOpt(length = N, fitness_fn = fitness_cust, maximize=True)
 
 
-#rhc_counter = RHCCounter()
-#rhc_user_info = []
-#best_state, best_fitness, curve = mr.random_hill_climb(problem_cust, restarts= 5,    random_state = 1, curve=True, 
-                                                       #state_fitness_callback=rhc_counter, callback_user_info=rhc_user_info)
-#print(rhc_counter)
-#print(best_state)
-#print(best_fitness)
+rhc_counter = RHCCounter()
+rhc_user_info = []
+best_state, best_fitness, curve = mr.random_hill_climb(problem_cust, restarts= 5,    random_state = 989978, curve=True, argmax_mode=True,
+                                                       state_fitness_callback=rhc_counter, callback_user_info=rhc_user_info, max_attempts=2)
+print(rhc_counter)
+print(best_state)
+print(best_fitness)
 
-#plt.plot(curve)
-#plt.show()
+plt.plot(curve)
+plt.show()
 
 np.random.seed(0)
 init_state = np.random.randint(0, 2, size=N)
 
 print(fn_fitness(init_state))
 
-best_state, best_fitness, curve = mr.simulated_annealing(problem_cust, schedule = mr.GeomDecay(init_temp=1000, decay=0.9, min_temp=0.001), 
+best_state, best_fitness, curve = mr.simulated_annealing(problem_cust, schedule = mr.GeomDecay(init_temp=20, decay=0.9995, min_temp=0.001), 
                                                       max_attempts = 200, max_iters = 10000, 
-                                                       random_state = 10, curve=True)
+                                                       random_state = 68998, curve=True)
 
 print(best_state)
 print(best_fitness)
@@ -73,8 +73,8 @@ plt.plot(curve)
 plt.show()
 
 
-best_state, best_fitness, curve = mr.genetic_alg(problem_cust, random_state = 2, max_attempts=100, pop_size=200, 
-                                                 elite_dreg_ratio=0.9, curve=True)
+best_state, best_fitness, curve = mr.genetic_alg(problem_cust, random_state = 2, max_attempts=100, pop_size=200, mutation_prob=0.2,
+                                                 elite_dreg_ratio=0.95, curve=True)
 
 print(best_state)
 print(best_fitness)

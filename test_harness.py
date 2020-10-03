@@ -1,4 +1,5 @@
 import numpy as np
+import typing, itertools
 import time 
 import scipy.stats
 import pandas as pd
@@ -21,6 +22,8 @@ class FitnessFunction(object):
 class Runner(object):
     def run(self, random_state):
         pass
+    def set_params(params):
+        self.params = params
     
 class RHCRunner(Runner):
     def __init__(self, fn:FitnessFunction, params):
@@ -37,7 +40,7 @@ class RHCRunner(Runner):
                                                                state_fitness_callback=self.counter, 
                                                                callback_user_info=rhc_user_info, **self.params)        
         
-        rec = dict(state=best_state, fitness=best_fitness, curve=curve, iterations=self.counter.total_iterations, 
+        rec = dict(state=best_state, fitness=best_fitness, curve=self.counter.curves, iterations=self.counter.total_iterations, 
                    evaluations=self.fn.count)
         return rec
     
@@ -54,7 +57,7 @@ class SARunner(Runner):
         best_state, best_fitness, curve = mr.simulated_annealing(problem, random_state = random_state, curve=True, **self.params)
         
         
-        rec = dict(state=best_state, fitness=best_fitness, curve=curve, iterations=self.counter.total_iterations, 
+        rec = dict(state=best_state, fitness=best_fitness, curve=curve, iterations=len(curve), 
                    evaluations=self.fn.count)
         return rec
 
@@ -65,13 +68,13 @@ class GARunner(Runner):
     
     def run(self, random_state):
         self.fn.reset()
-        self.counter = RHCCounter()
+        
         problem = self.fn.get_problem()
         
         best_state, best_fitness, curve = mr.genetic_alg(problem, random_state = random_state, curve=True, **self.params)
         
         
-        rec = dict(state=best_state, fitness=best_fitness, curve=curve, iterations=self.counter.total_iterations, 
+        rec = dict(state=best_state, fitness=best_fitness, curve=curve, iterations=len(curve), 
                    evaluations=self.fn.count)
         return rec
 
@@ -83,12 +86,12 @@ class MIMICRunner(Runner):
     
     def run(self, random_state):
         self.fn.reset()
-        self.counter = RHCCounter()
+        
         problem = self.fn.get_problem()
         
         best_state, best_fitness, curve = mr.mimic(problem, random_state = random_state,  curve=True, **self.params)
         
-        rec = dict(state=best_state, fitness=best_fitness, curve=curve, iterations=self.counter.total_iterations, 
+        rec = dict(state=best_state, fitness=best_fitness, curve=curve, iterations=len(curve), 
                    evaluations=self.fn.count)
         return rec
     
@@ -139,6 +142,18 @@ def ranks(rec):
     df = pd.DataFrame(R, index=algos, columns=np.arange(1, len(algos)+1))
     return df
 
+def summary_scores(rec):
+    algos = list(rec.keys())
+    
+    d = {}
+    for i, a in enumerate(algos):
+        x = rec[a]['fitness']
+        d[a] = [np.mean(x), np.std(x), np.min(x), np.percentile(x, 25), np.percentile(x, 50), np.percentile(x, 75), np.max(x)]
+    df = pd.DataFrame.from_dict(d, orient='index', columns=['mean', 'std', 'min', '25 pct', '50 pct', '75 pct', 'max'])
+    return df
+
+
+
 def pct_time_correct(rec, truth):
     algos = list(rec.keys())
     
@@ -160,7 +175,41 @@ def resource_report(rec):
     df = pd.DataFrame.from_dict(d, orient='index', columns=['Mean Time', 'Std Time', 'Mean Evals', 'Std Evals', 'Mean Iters', 'Std Iters'])
     return df
         
+def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int):
+    keys = list(param_grid.keys())
+    values = list(param_grid.values())
     
+    curves = {}
+ 
+    for params in  itertools.product(*values):
+        d = dict(zip(keys, params))
+        runner.set_params(d)
+        rec = suite.test(runs)
+        l = []
+        M = 0
+        for curve in rec['curves']:
+            if isinstance(runner, RHCRunner):
+                curve = curve[-1]        
+            l.append(curve)
+            M = max(M, len(curve))
+        
+        p33 = []
+        p66 = []
+        p50 = []
+        mean = []
+        std = []
+        for j in range(M):
+            p = []
+            if j<len(l[i]):
+                p.append(l[i][j])
+            p33.append(np.percentile(p, 33))
+            p66.append(np.percentile(p, 66))
+            p50.append(np.percentile(p, 50))
+            mean.append(np.mean(p))
+            std.append(np.std(p))
+        curves[params] = {'p33':p33, 'p66': p66, 'p50': p50, 'mean': mean, 'std': std}
+    return curves
+        
     
 if __name__=='__main__':
     class LessTraveled(FitnessFunction):

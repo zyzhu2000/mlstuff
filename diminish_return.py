@@ -4,49 +4,21 @@ import matplotlib.pyplot as plt
 import scipy.stats
 
 
-N = 21
-penalty = 1
-
-def count_score(state, val):
-    score = 0.0
-    p = 0
-    for i in range(len(state)):
-        if state[i] == val:
-            score += 1
-            if i==0 or state[i]!=state[i-1]:
-                p += penalty
-    return score - p
-
-def threholding(s):
-    if s<4:
-        return 0
-    elif 4<=s<14:
-        return 50
-    else:
-        return 100
-        
+N = 20
+M = 3
+value = np.array([1, 1.0001, 1.0002])
+pos = np.arange(N)        
+pos = np.mod(pos, M).astype(int)
 
 def fn_fitness(state:np.ndarray):
-    s0 = count_score(state, 0)
-    s1 = count_score(state, 1)
+    x = np.sum(state*value[pos])
+    y = np.sum((1-state)*value[pos])
     
-    v0 = threholding(s0)
-    v1 = threholding(s1)
+    v = 1.0/ (np.abs(x-10) + np.abs(y-10)+1)
     
-    return v0 + v1
+    return v
             
 
-def fn_fitness2(state:np.ndarray):
-    s0 = count_score(state, 0)
-    s1 = count_score(state, 1)
-    
-    pv = np.array([s0-15, s1-15, s0-3, s1-3])
-    p = scipy.stats.norm.cdf(pv/1)
-    
-    
-    v = (p[0] + p[1])*(1000-100) + (p[2] + p[3])*100
-    
-    return v 
 
 fitness_cust = mr.CustomFitness(fn_fitness)
 
@@ -70,7 +42,7 @@ plt.show()
 
 print(fn_fitness(init_state))
 
-best_state, best_fitness, curve = mr.simulated_annealing(problem_cust, schedule = mr.GeomDecay(10, 0.999), 
+best_state, best_fitness, curve = mr.simulated_annealing(problem_cust, schedule = mr.GeomDecay(1, 0.99), 
                                                       max_attempts = 100, max_iters = 10000, 
                                                       init_state = init_state, random_state = 1, curve=True)
 
