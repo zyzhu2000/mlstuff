@@ -47,7 +47,7 @@ class FourPeaks(FitnessFunction):
 
 if __name__=='__main__':
     
-    runs = 10
+    runs = 50
     
     res = {}
     suite = TestSuite(0)
