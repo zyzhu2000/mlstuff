@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 N = 50
-T = 3
+T = 5
 
 def head(state, val):
     idx = np.nonzero(state==val^1)[0]
@@ -27,7 +27,9 @@ def fn_fitness(state:np.ndarray):
     v = max(tail0, head1)
     return reward + v
 
-
+#init_state = np.zeros(N)
+#init_state[0:6]=1
+#print(fn_fitness(init_state))
 
 fitness_cust = mr.CustomFitness(fn_fitness)
 

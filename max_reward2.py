@@ -65,13 +65,13 @@ res = {}
 suite = TestSuite(0)
 
 fn = MaxReward()
-runner = RHCRunner(fn, {'restarts':5, 'max_attempts' : 200})
+runner = RHCRunner(fn, {'restarts':5, 'max_attempts' : 200, 'argmax_mode':True})
 res['RHC'] = suite.test(runner, runs)
 print(resource_report(res))
 
 fn = MaxReward()
 runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=10, decay=0.999, min_temp=0.001),  
-                            max_attempts = 200, max_iters = 20000))
+                            max_attempts = 10, max_iters = 20000))
 res['SA'] = suite.test(runner, runs)
 print(pct_time_correct(res, 150))
 print(resource_report(res))

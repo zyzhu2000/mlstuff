@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import scipy.stats
 
 
-N = 80
+N = 40
 
 seed = np.random.randint(65565)
 print(seed)
@@ -17,7 +17,7 @@ probs = np.random.uniform(0.4, 0.6, 2*N+1)
     
 def fn_fitness(state:np.ndarray):
     v = 1.0
-    for i, s in enumerate(state[perm]):
+    for i, s in enumerate(state):
         if i==0:
             if s==0:
                 v = probs[0]
@@ -38,10 +38,10 @@ fitness_cust = mr.CustomFitness(fn_fitness)
 problem_cust = mr.DiscreteOpt(length = N, fitness_fn = fitness_cust, maximize=True)
 
 np.random.seed(0)
-init_state = np.random.randint(0, 2, size=N)
 
 
-best_state, best_fitness, curve = mr.random_hill_climb(problem_cust, restarts= 100, max_attempts=100,   init_state = init_state, random_state = 1, curve=True)
+best_state, best_fitness, curve = mr.random_hill_climb(problem_cust, restarts= 100, argmax_mode=True,   
+                                                       random_state = 1, curve=True)
 
 print(best_state)
 print(best_fitness)
@@ -50,18 +50,9 @@ plt.plot(curve)
 plt.show()
 
 
-
-# Define decay schedule
-schedule = mr.ExpDecay()
-# Solve using simulated annealing - attempt 1
-
-#init_state[:] = 0
-#init_state[:5] = 1
-print(fn_fitness(init_state))
-
-best_state, best_fitness, curve = mr.simulated_annealing(problem_cust, schedule = schedule, 
-                                                      max_attempts = 100, max_iters = 10000, 
-                                                      init_state = init_state, random_state = 1, curve=True)
+best_state, best_fitness, curve = mr.simulated_annealing(problem_cust, schedule = mr.ExpDecay(), 
+                                                      max_attempts = 8, max_iters = 10000, 
+                                                      random_state = 1, curve=True)
 
 print(best_state)
 print(best_fitness)

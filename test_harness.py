@@ -1,5 +1,5 @@
 import numpy as np
-import typing, itertools
+import typing, itertools, importlib
 import time 
 import scipy.stats
 import pandas as pd
@@ -56,8 +56,24 @@ class SARunner(Runner):
         self.fn.reset()
         self.counter = RHCCounter()
         problem = self.fn.get_problem()
+                
+            
+        def sa(problem, **kargs):
+            d = {}
+            d2 = {}
+            for k in kargs:
+                if '__' in k:
+                    _, p = k.split('__')
+                    d2[p] = kargs[k]
+                else:
+                    d[k] = kargs[k]
+            schedule = mr.GeomDecay(**d2)
+            if 'schedule' in d:
+                del d['schedule']
+                
+            return mr.simulated_annealing(problem, schedule=schedule, **d)
         
-        best_state, best_fitness, curve = mr.simulated_annealing(problem, random_state = random_state, curve=True, **self.params)
+        best_state, best_fitness, curve = sa(problem, random_state = random_state, curve=True, **self.params)
         
         
         rec = dict(state=best_state, fitness=best_fitness, curve=curve, iterations=len(curve), 
@@ -178,13 +194,20 @@ def resource_report(rec):
     df = pd.DataFrame.from_dict(d, orient='index', columns=['Mean Time', 'Std Time', 'Mean Evals', 'Std Evals', 'Mean Iters', 'Std Iters'])
     return df
         
-def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int):
+def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_product=True):
     keys = list(param_grid.keys())
     values = list(param_grid.values())
     
     curves = {}
- 
-    for params in  itertools.product(*values):
+    
+    if is_product:
+        gen_params = itertools.product(*values)
+    else:
+        l = [param_grid[k] for k in keys]
+        gen_params = zip(*l)
+        
+        
+    for params in  gen_params:
         d = dict(zip(keys, params))
         runner.update_params(d)
         rec = suite.test(runner, runs)
@@ -214,6 +237,12 @@ def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int):
         curves[params] = {'p33':p33, 'p66': p66, 'p50': p50, 'mean': mean, 'std': std}
     return curves
         
+def printdf(df:pd.DataFrame, filename=None):
+    if filename is not None:
+        df.to_csv(filename + ".csv")
+        df.to_latex(filename + ".tex")
+    print(df)
+    
     
 if __name__=='__main__':
     class LessTraveled(FitnessFunction):
