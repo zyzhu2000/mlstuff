@@ -22,8 +22,11 @@ class FitnessFunction(object):
 class Runner(object):
     def run(self, random_state):
         pass
-    def set_params(params):
+    def set_params(self, params):
         self.params = params
+    def update_params(self, params):
+        self.params.update(params)
+    
     
 class RHCRunner(Runner):
     def __init__(self, fn:FitnessFunction, params):
@@ -183,8 +186,8 @@ def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int):
  
     for params in  itertools.product(*values):
         d = dict(zip(keys, params))
-        runner.set_params(d)
-        rec = suite.test(runs)
+        runner.update_params(d)
+        rec = suite.test(runner, runs)
         l = []
         M = 0
         for curve in rec['curves']:
@@ -200,8 +203,9 @@ def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int):
         std = []
         for j in range(M):
             p = []
-            if j<len(l[i]):
-                p.append(l[i][j])
+            for i in range(len(l)):
+                if j<len(l[i]):
+                    p.append(l[i][j])
             p33.append(np.percentile(p, 33))
             p66.append(np.percentile(p, 66))
             p50.append(np.percentile(p, 50))

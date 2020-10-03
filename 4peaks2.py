@@ -1,5 +1,6 @@
 import numpy as np
 import time 
+import matplotlib.pyplot as plt
 import mlrose_hiive as mr
 from mrcounter import RHCCounter
 from test_harness import *
@@ -56,6 +57,17 @@ print(summary_scores(res))
 print(pct_time_correct(res, 15))
 print(resource_report(res))
 
+curves = make_curve(suite, runner, dict(restarts=[5, 10, 100]), 5)
+plt.figure()
+
+for params in curves:
+    p50 = curves[params]['p50']
+    p33 = curves[params]['p33']
+    p66 = curves[params]['p66']
+    x = np.arange(1, len(p50)+1)
+    p = plt.plot(x, p50)
+    plt.fill_between(x, p33 , p66, alpha=0.2, color=p[-1].get_color())
+plt.show()
 
 fn = FourPeaks()
 runner = SARunner(fn, dict(schedule = mr.ExpDecay(exp_const=0.001),  
