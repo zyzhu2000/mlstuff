@@ -193,6 +193,28 @@ def resource_report(rec):
         d[a] = [np.mean(t), np.std(t), np.mean(e), np.std(e), np.mean(it), np.std(it)]
     df = pd.DataFrame.from_dict(d, orient='index', columns=['Mean Time', 'Std Time', 'Mean Evals', 'Std Evals', 'Mean Iters', 'Std Iters'])
     return df
+
+
+def grid_search(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_product=True):
+    keys = list(param_grid.keys())
+    values = list(param_grid.values())
+    
+    if is_product:
+        gen_params = itertools.product(*values)
+    else:
+        l = [param_grid[k] for k in keys]
+        gen_params = zip(*l)
+        
+    r = {}    
+    for params in  gen_params:
+        d = dict(zip(keys, params))
+        runner.update_params(d)
+        rec = suite.test(runner, runs)
+        r[params] = np.mean(rec['fitness'])
+    return r
+    
+    
+    
         
 def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_product=True):
     keys = list(param_grid.keys())

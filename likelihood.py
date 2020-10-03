@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import scipy.stats
 
 
-N = 40
+N = 64
 
 seed = np.random.randint(65565)
 print(seed)
@@ -30,7 +30,7 @@ def fn_fitness(state:np.ndarray):
             else:
                 v *= (1-pr)
         p = int(s)
-    return v
+    return v*1e18
 
 fitness_cust = mr.CustomFitness(fn_fitness)
 
@@ -40,7 +40,7 @@ problem_cust = mr.DiscreteOpt(length = N, fitness_fn = fitness_cust, maximize=Tr
 np.random.seed(0)
 
 
-best_state, best_fitness, curve = mr.random_hill_climb(problem_cust, restarts= 100, argmax_mode=True,   
+best_state, best_fitness, curve = mr.random_hill_climb(problem_cust, restarts= 1, argmax_mode=True,   
                                                        random_state = 1, curve=True)
 
 print(best_state)
@@ -50,8 +50,8 @@ plt.plot(curve)
 plt.show()
 
 
-best_state, best_fitness, curve = mr.simulated_annealing(problem_cust, schedule = mr.ExpDecay(), 
-                                                      max_attempts = 8, max_iters = 10000, 
+best_state, best_fitness, curve = mr.simulated_annealing(problem_cust, schedule = mr.GeomDecay(0.1, 0.9, 0.0001), 
+                                                      max_attempts = 20, max_iters = 10000, 
                                                       random_state = 1, curve=True)
 
 print(best_state)

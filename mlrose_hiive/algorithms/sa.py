@@ -113,6 +113,9 @@ def simulated_annealing(problem, schedule=GeomDecay(), max_attempts=10,
             current_fitness = problem.get_fitness()
             delta_e = next_fitness - current_fitness
             prob = np.exp(delta_e/temp)
+            
+            if np.isinf(prob) or np.isnan(prob):
+                ii = 0
             # print(f'{iters} : {current_fitness}')
             # If best neighbor is an improvement or random value is less
             # than prob, move to that state and reset attempts counter
