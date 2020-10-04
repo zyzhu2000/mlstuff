@@ -81,7 +81,7 @@ if __name__=='__main__':
     
     
     fn = FourPeaks()
-    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=2000, max_attempts=50))
+    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=3000, max_attempts=50))
     res['MIMIC'] = suite.test(runner, runs)
     printdf(ranks(res), 'ranks')
     printdf(summary_scores(res), "summ")
