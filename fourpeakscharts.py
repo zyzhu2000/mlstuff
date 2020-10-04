@@ -1,5 +1,8 @@
 
 from fourpeaks2 import *
+
+g_interactive = False
+
 def make_4peaks_restarts():
     runs = 10
     suite = TestSuite(0)
@@ -133,15 +136,17 @@ def make_mimic_keep():
     plt.grid()
     plt.legend(fontsize=12)
     plt.savefig('fpeaks-mimic-keep.pdf')
-    plt.show()
+    if g_interactive:
+        plt.show()
+
 
 def make_mimic_pop():
-    runs = 5
+    runs = 10
     suite = TestSuite(0)
     fn = FourPeaks()
     runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=2000, max_attempts=50))
     
-    curves = make_curve(suite, runner, dict(pop_size=[200, 500, 1000, 1500, 2000, 2500]), runs=runs, is_product=False)
+    curves = make_curve(suite, runner, dict(pop_size=[200, 500, 1000, 1500, 2000, 2500, 3000, 3500]), runs=runs, is_product=False)
     plt.figure()
     
     for params in curves:
@@ -160,11 +165,12 @@ def make_mimic_pop():
     plt.grid()
     plt.legend(fontsize=12)
     plt.savefig('fpeaks-mimic-pop.pdf')
-    plt.show()
+    if g_interactive:
+        plt.show()
 
 #make_4peaks_restarts()
 #make_sa_params()
 #make_ga_mate()
 #make_ga_mutation()
-#make_mimic_keep()
+make_mimic_keep()
 make_mimic_pop()
