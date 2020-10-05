@@ -47,7 +47,7 @@ class CSequence(FitnessFunction):
 
 
 if __name__=='__main__':
-    runs = 5
+    runs = 50
     gs = False
     
     if gs:
@@ -72,7 +72,7 @@ if __name__=='__main__':
     
     
     fn = CSequence()
-    runner = RHCRunner(fn, {'restarts':10,  'argmax_mode':True})
+    runner = RHCRunner(fn, {'restarts':100,  'argmax_mode':True})
     res['RHC'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
@@ -81,7 +81,7 @@ if __name__=='__main__':
     
     
     fn = CSequence()
-    runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=2, decay=0.8),  
+    runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=1, decay=0.1),  
                                 max_attempts = 8, max_iters = 1000))
     res['SA'] = suite.test(runner, runs)
     print(ranks(res))
@@ -91,7 +91,7 @@ if __name__=='__main__':
     print(resource_report(res))
     
     fn = CSequence()
-    runner = GARunner(fn, dict(max_attempts=50, pop_size=200, pop_breed_percent=0.75, mutation_prob=0.6,  elite_dreg_ratio=0.9))
+    runner = GARunner(fn, dict(max_attempts=50, pop_size=200, pop_breed_percent=0.6, mutation_prob=0.5,  elite_dreg_ratio=0.9))
     res['GA'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
@@ -100,7 +100,7 @@ if __name__=='__main__':
     
     
     fn = CSequence()
-    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=1500, max_attempts=50))
+    runner = MIMICRunner(fn, dict(keep_pct=0.3, pop_size=1500, max_attempts=50))
     res['MIMIC'] = suite.test(runner, runs)
     printdf(ranks(res), 'ranks-li')
     printdf(summary_scores(res), "summ-li")

@@ -14,7 +14,7 @@ def fn_fitness(state:np.ndarray):
     u = np.sum(state)
     a = 70
     b = 100
-    z = 15+2
+    z = 15+3
     
     if u<=z:
         v = a/z*(z-u)
@@ -104,7 +104,7 @@ if __name__=='__main__':
     
     
     fn = Trap()
-    runner = RHCRunner(fn, {'restarts':10,  'argmax_mode':True})
+    runner = RHCRunner(fn, {'restarts':20,  'argmax_mode':True})
     res['RHC'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
@@ -123,7 +123,7 @@ if __name__=='__main__':
     print(resource_report(res))
     
     fn = Trap()
-    runner = GARunner(fn, dict(max_attempts=50, pop_size=200, pop_breed_percent=0.75, mutation_prob=0.6,  elite_dreg_ratio=0.9))
+    runner = GARunner(fn, dict(max_attempts=50, pop_size=200, pop_breed_percent=0.75, mutation_prob=0.5,  elite_dreg_ratio=0.9))
     res['GA'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
@@ -132,7 +132,7 @@ if __name__=='__main__':
     
     
     fn = Trap()
-    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=1500, max_attempts=50))
+    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=500, max_attempts=50))
     res['MIMIC'] = suite.test(runner, runs)
     printdf(ranks(res), 'ranks-li')
     printdf(summary_scores(res), "summ-li")

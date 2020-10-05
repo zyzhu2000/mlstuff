@@ -1,16 +1,16 @@
 
-from likelihood2 import *
+from trap2 import *
 
 g_interactive = False
-trunk = 'li'
+trunk = 'tr'
 
 def make_rhc_restarts():
-    runs = 10
+    runs = 100
     suite = TestSuite(0)
-    fn = CSequence()
+    fn = Trap()
     runner = RHCRunner(fn, {'restarts':5,  'argmax_mode':True, 'max_iters':50})
         
-    curves = make_curve(suite, runner, dict(restarts=[10, 50, 100]), runs=runs)
+    curves = make_curve(suite, runner, dict(restarts=[5, 10, 20]), runs=runs)
     plt.figure()
     
     for params in curves:
@@ -24,7 +24,7 @@ def make_rhc_restarts():
         #p = plt.plot(x, mean, label='restarts={}'.format(params[0]))
         #plt.fill_between(x, mean-std , mean+std, alpha=0.2, color=p[-1].get_color())
         p = plt.plot(x, p50, label='restarts={}'.format(params[0]))
-        plt.fill_between(x, p33 , p66, alpha=0.2, color=p[-1].get_color())        
+        #plt.fill_between(x, p33 , p66, alpha=0.2, color=p[-1].get_color())        
     #plt.title('Effect of Restarts')
     plt.xlabel('Iterations', fontsize=12)
     plt.ylabel('Fitness Score', fontsize=12)
@@ -34,13 +34,13 @@ def make_rhc_restarts():
     plt.show()
 
 def make_sa_params():
-    runs = 50
+    runs = 100
     suite = TestSuite(0)
-    fn = CSequence()
+    fn = Trap()
     runner = SARunner(fn, dict(schedule = mr.GeomDecay(),  
                             max_attempts = 8, max_iters = 180))
     
-    curves = make_curve(suite, runner, dict(schedule__init_temp=[1, 1, 10, 10, 10, 100, 100], schedule__decay=[0.1, 0.5, 0.1, 0.5, 0.7, 0.1, 0.5]), 
+    curves = make_curve(suite, runner, dict(schedule__init_temp=[15, 15, 15, 20, 20, 20], schedule__decay=[0.999, 0.99, 0.9, 0.999, 0.99, 0.9,]), 
                         runs=runs, 
                         is_product=False, cutoff=0.3)
     plt.figure()
@@ -67,7 +67,7 @@ def make_sa_params():
 def make_ga_mate():
     runs = 10
     suite = TestSuite(0)
-    fn = CSequence()
+    fn = Trap()
     runner = GARunner(fn, dict(max_attempts=50, pop_size=200,   elite_dreg_ratio=0.9))
     
     curves = make_curve(suite, runner, dict(pop_breed_percent=[0.5, 0.6, 0.75, 0.9]), runs=runs, is_product=False)
@@ -94,7 +94,7 @@ def make_ga_mate():
 def make_ga_mutation():
     runs = 10
     suite = TestSuite(0)
-    fn = CSequence()
+    fn = Trap()
     runner = GARunner(fn, dict(max_attempts=50, pop_size=200,   elite_dreg_ratio=0.9))
     
     curves = make_curve(suite, runner, dict(mutation_prob=[0.1, 0.3, 0.5, 0.7]), runs=runs, is_product=False)
@@ -122,7 +122,7 @@ def make_ga_mutation():
 def make_mimic_keep():
     runs = 5
     suite = TestSuite(0)
-    fn = CSequence()
+    fn = Trap()
     runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=1000, max_attempts=50))
     
     curves = make_curve(suite, runner, dict(keep_pct=[0.05, 0.1, 0.2, 0.3, 0.6]), runs=runs, is_product=False)
@@ -151,7 +151,7 @@ def make_mimic_keep():
 def make_mimic_pop():
     runs = 5
     suite = TestSuite(0)
-    fn = CSequence()
+    fn = Trap()
     runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=1000, max_attempts=50))
     
     curves = make_curve(suite, runner, dict(pop_size=[200, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000]), runs=runs, is_product=False)
