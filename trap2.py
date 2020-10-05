@@ -139,7 +139,7 @@ if __name__=='__main__':
     printdf(pct_time_correct(res, 94), "score-li")
     printdf(resource_report(res), "resource-li")
     
-    with open('li.pkl', 'wb') as f:
+    with open('tr.pkl', 'wb') as f:
         pkl.dump(res, f)
         
         
