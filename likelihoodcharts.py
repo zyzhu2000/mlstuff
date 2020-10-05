@@ -120,7 +120,7 @@ def make_ga_mutation():
 
 
 def make_mimic_keep():
-    runs = 10
+    runs = 5
     suite = TestSuite(0)
     fn = CSequence()
     runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=2000, max_attempts=50))
@@ -149,7 +149,7 @@ def make_mimic_keep():
 
 
 def make_mimic_pop():
-    runs = 10
+    runs = 5
     suite = TestSuite(0)
     fn = CSequence()
     runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=2000, max_attempts=50))
@@ -181,4 +181,4 @@ def make_mimic_pop():
 #make_ga_mate()
 #make_ga_mutation()
 make_mimic_keep()
-#make_mimic_pop()
+make_mimic_pop()
