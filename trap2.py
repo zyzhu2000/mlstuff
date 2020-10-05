@@ -134,10 +134,10 @@ if __name__=='__main__':
     fn = Trap()
     runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=500, max_attempts=50))
     res['MIMIC'] = suite.test(runner, runs)
-    printdf(ranks(res), 'ranks-li')
-    printdf(summary_scores(res), "summ-li")
-    printdf(pct_time_correct(res, 94), "score-li")
-    printdf(resource_report(res), "resource-li")
+    printdf(ranks(res), 'ranks-tr')
+    printdf(summary_scores(res), "summ-tr")
+    printdf(pct_time_correct(res, 94), "score-tr")
+    printdf(resource_report(res), "resource-tr")
     
     with open('tr.pkl', 'wb') as f:
         pkl.dump(res, f)
