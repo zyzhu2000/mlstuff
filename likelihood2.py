@@ -5,8 +5,6 @@ import mlrose_hiive as mr
 from mrcounter import RHCCounter
 from test_harness import *
 
-
-
 N = 64
 
 seed = np.random.randint(65565)
@@ -53,11 +51,12 @@ if __name__=='__main__':
     gs = False
     
     if gs:
+        runs = 100
             
         suite = TestSuite(0)
         fn = CSequence()
         runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=2, decay=0.8),  
-                                    max_attempts = 20, max_iters = 1000))
+                                    max_attempts = 20, max_iters = 180))
         
         search_res = grid_search(suite, runner, param_grid=dict(schedule__init_temp=[0.001, 0.01, 0.1, 1, 10, 100], 
                                                                 schedule__decay=[0.9999, 0.9999, 0.999, 0.99, 0.9, 0.8, 0.5]), runs=runs)

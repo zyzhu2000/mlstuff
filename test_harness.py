@@ -213,10 +213,36 @@ def grid_search(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_pr
         r[params] = np.mean(rec['fitness'])
     return r
     
+def get_curves(raw_curves, runner_type):
+    l = []
+    M = 0
+    for curve in raw_curves:
+        if runner_type.lower()=='rhc':
+            curve = curve[-1]        
+        l.append(curve)
+        M = max(M, len(curve))
+    
+    p33 = []
+    p66 = []
+    p50 = []
+    mean = []
+    std = []
+    for j in range(M):
+        p = []
+        for i in range(len(l)):
+            if j<len(l[i]):
+                p.append(l[i][j])
+        p33.append(np.percentile(p, 33))
+        p66.append(np.percentile(p, 66))
+        p50.append(np.percentile(p, 50))
+        mean.append(np.mean(p))
+        std.append(np.std(p))
+    
+    return {'p33':p33, 'p66': p66, 'p50': p50, 'mean': mean, 'std': std}
     
     
         
-def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_product=True):
+def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_product=True, cutoff=0.3):
     keys = list(param_grid.keys())
     values = list(param_grid.values())
     
@@ -246,16 +272,19 @@ def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_pro
         p50 = []
         mean = []
         std = []
+        m = 0
         for j in range(M):
             p = []
             for i in range(len(l)):
                 if j<len(l[i]):
                     p.append(l[i][j])
-            p33.append(np.percentile(p, 33))
-            p66.append(np.percentile(p, 66))
-            p50.append(np.percentile(p, 50))
-            mean.append(np.mean(p))
-            std.append(np.std(p))
+            m = max(m, len(p))
+            if len(p)>cutoff*m:
+                p33.append(np.percentile(p, 33))
+                p66.append(np.percentile(p, 66))
+                p50.append(np.percentile(p, 50))
+                mean.append(np.mean(p))
+                std.append(np.std(p))
         curves[params] = {'p33':p33, 'p66': p66, 'p50': p50, 'mean': mean, 'std': std}
     return curves
         
