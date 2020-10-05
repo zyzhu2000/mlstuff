@@ -72,7 +72,7 @@ if __name__=='__main__':
     
     
     fn = CSequence()
-    runner = RHCRunner(fn, {'restarts':100,  'argmax_mode':True})
+    runner = RHCRunner(fn, {'restarts':50,  'argmax_mode':True})
     res['RHC'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
