@@ -4,7 +4,7 @@
 # License: BSD 3 clause
 
 import numpy as np
-
+import copy
 
 def flatten_weights(weights):
     """Flatten list of weights arrays into a 1D array.
@@ -120,6 +120,7 @@ def gradient_descent_original(problem, max_attempts=10, max_iters=np.inf,
 
     if curve:
         fitness_curve = []
+        l_state_curve = []
 
     attempts = 0
     iters = 0
@@ -147,10 +148,11 @@ def gradient_descent_original(problem, max_attempts=10, max_iters=np.inf,
 
         if curve:
             fitness_curve.append(problem.get_fitness())
+            l_state_curve.append(copy.copy(problem.get_state()))
 
         problem.set_state(next_state)
 
     if curve:
-        return best_state, best_fitness, np.asarray(fitness_curve)
+        return best_state, best_fitness, np.asarray(fitness_curve), l_state_curve
 
-    return best_state, best_fitness, None
+    return best_state, best_fitness, None, None

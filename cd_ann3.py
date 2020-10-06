@@ -15,15 +15,24 @@ from ann import *
 from credit_default import CreditDefault_ANN
 import mlrose_hiive as mr
 from mlrose_hiive.algorithms.decay import GeomDecay
+from loader import DataLoader
 
-with open('ann.pkl', 'rb') as f:
-    model = pkl.load(f)
 
+loader = DataLoader()
+data = loader.load("CreditDefault")
+
+X = data.X
+y = data.y
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=8888)
+X_valid = data.X_valid
+y_valid = data.y_valid
+
+mean = np.mean(X_train, axis=0)
+std = np.std(X_train, axis=0)
+X_train = (X_train - mean) / std
+X_test = (X_test - mean) / std
+X_valid = (X_valid - mean) / std
     
-X_train = model.trained_model['X_train']
-y_train = model.trained_model['y_train']
-X_test =  model.trained_model['X_test']
-y_test =  model.trained_model['y_test']
 
 np.random.seed(0)
 def xavier_init(n1, n2):

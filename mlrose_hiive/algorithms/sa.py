@@ -5,6 +5,7 @@
 # License: BSD 3 clause
 
 import numpy as np
+import copy
 
 from mlrose_hiive.algorithms.decay import GeomDecay
 from mlrose_hiive.decorators import short_name
@@ -14,7 +15,7 @@ from mlrose_hiive.decorators import short_name
 def simulated_annealing(problem, schedule=GeomDecay(), max_attempts=10,
                         max_iters=np.inf, init_state=None, curve=False,
                         random_state=None,
-                        state_fitness_callback=None, callback_user_info=None, equality=False):
+                        state_fitness_callback=None, callback_user_info=None, equality=False, state_curve=False):
     """Use simulated annealing to find the optimum for a given
     optimization problem.
     Parameters
@@ -89,6 +90,7 @@ def simulated_annealing(problem, schedule=GeomDecay(), max_attempts=10,
                                user_data=callback_user_info)
 
     fitness_curve = []
+    l_state_curve = []
 
     attempts = 0
     iters = 0
@@ -127,6 +129,11 @@ def simulated_annealing(problem, schedule=GeomDecay(), max_attempts=10,
 
         if curve:
             fitness_curve.append(problem.get_adjusted_fitness())
+        
+        if state_curve:
+            l_state_curve.append(copy.copy(problem.get_state()))
+            
+            
 
         # invoke callback
         if state_fitness_callback is not None:
@@ -147,6 +154,9 @@ def simulated_annealing(problem, schedule=GeomDecay(), max_attempts=10,
     best_state = problem.get_state()
 
     if curve:
+        if state_curve:
+            return best_state, best_fitness, np.asarray(fitness_curve), l_state_curve
+            
         return best_state, best_fitness, np.asarray(fitness_curve)
 
     return best_state, best_fitness, None

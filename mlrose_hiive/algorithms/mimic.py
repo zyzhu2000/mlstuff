@@ -5,6 +5,7 @@
 # License: BSD 3 clause
 
 import numpy as np
+import copy
 
 from mlrose_hiive.decorators import short_name
 
@@ -12,7 +13,7 @@ from mlrose_hiive.decorators import short_name
 @short_name('mimic')
 def mimic(problem, pop_size=200, keep_pct=0.2, max_attempts=10,
           max_iters=np.inf, curve=False, random_state=None,
-          state_fitness_callback=None, callback_user_info=None, noise=0.0):
+          state_fitness_callback=None, callback_user_info=None, noise=0.0, state_curve=False):
     """Use MIMIC to find the optimum for a given optimization problem.
     Parameters
     ----------
@@ -92,6 +93,7 @@ def mimic(problem, pop_size=200, keep_pct=0.2, max_attempts=10,
         np.random.seed(random_state)
 
     fitness_curve = []
+    l_state_curve = []
 
     # Initialize problem, population and attempts counter
     problem.reset()
@@ -136,6 +138,10 @@ def mimic(problem, pop_size=200, keep_pct=0.2, max_attempts=10,
         if curve:
             fitness_curve.append(problem.get_adjusted_fitness())
 
+        if state_curve:
+            l_state_curve.append(copy.copy(problem.get_state()))
+        
+
         # invoke callback
         if state_fitness_callback is not None:
             max_attempts_reached = (attempts == max_attempts) or (iters == max_iters) or problem.can_stop()
@@ -154,6 +160,9 @@ def mimic(problem, pop_size=200, keep_pct=0.2, max_attempts=10,
     best_state = problem.get_state().astype(int)
 
     if curve:
+        if state_curve:
+            return best_state, best_fitness, np.asarray(fitness_curve), l_state_curve
+        
         return best_state, best_fitness, np.asarray(fitness_curve)
 
     return best_state, best_fitness, None

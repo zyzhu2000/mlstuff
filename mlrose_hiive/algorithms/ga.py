@@ -5,6 +5,7 @@
 # License: BSD 3 clause
 
 import numpy as np
+import copy
 
 from mlrose_hiive.decorators import short_name
 
@@ -50,7 +51,7 @@ def genetic_alg(problem, pop_size=200, pop_breed_percent=0.75, elite_dreg_ratio=
                 minimum_elites=0, minimum_dregs=0, mutation_prob=0.1,
                 max_attempts=10, max_iters=np.inf, curve=False, random_state=None,
                 state_fitness_callback=None, callback_user_info=None,
-                hamming_factor=0.0, hamming_decay_factor=None):
+                hamming_factor=0.0, hamming_decay_factor=None, state_curve=False):
     """Use a standard genetic algorithm to find the optimum for a given
     optimization problem.
     Parameters
@@ -142,6 +143,7 @@ def genetic_alg(problem, pop_size=200, pop_breed_percent=0.75, elite_dreg_ratio=
         np.random.seed(random_state)
 
     fitness_curve = []
+    l_state_curve = []
 
     # Initialize problem, population and attempts counter
     problem.reset()
@@ -221,6 +223,10 @@ def genetic_alg(problem, pop_size=200, pop_breed_percent=0.75, elite_dreg_ratio=
 
         if curve:
             fitness_curve.append(problem.get_adjusted_fitness())
+        if state_curve:
+            l_state_curve.append(copy.copy(problem.get_state()))
+            
+            
 
         # invoke callback
         if state_fitness_callback is not None:
@@ -246,6 +252,9 @@ def genetic_alg(problem, pop_size=200, pop_breed_percent=0.75, elite_dreg_ratio=
     best_state = problem.get_state()
 
     if curve:
+        if state_curve:
+            return best_state, best_fitness, np.asarray(fitness_curve), l_state_curve
+       
         return best_state, best_fitness, np.asarray(fitness_curve)
 
     return best_state, best_fitness, None

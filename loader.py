@@ -138,8 +138,13 @@ class CreditDefaultLoader(object):
             
         data = Data()
         data.y = df['default payment next month'].values[:15000]
+        data.y_valid = df['default payment next month'].values[15000:18000]
         df = df.drop(columns=['default payment next month'])
         data.X = df.iloc[:15000,:].values
+        
+        data.X_valid = df.iloc[15000:18000,:].values
+        
+        
         
         data.n_classes = 2
         

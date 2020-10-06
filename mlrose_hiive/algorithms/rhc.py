@@ -5,14 +5,15 @@
 # License: BSD 3 clause
 
 import numpy as np
-
+import copy
 from mlrose_hiive.decorators import short_name
 
 
 @short_name('rhc')
 def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
                       init_state=None, curve=False, random_state=None,
-                      state_fitness_callback=None, callback_user_info=None, argmax_mode=False):
+                      state_fitness_callback=None, callback_user_info=None, argmax_mode=False,
+                      state_curve=False):
     """Use randomized hill climbing to find the optimum for a given
     optimization problem.
     Parameters
@@ -84,6 +85,7 @@ def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
     best_state = None
 
     best_fitness_curve = []
+    best_state_curve = []
 
     continue_iterating = True
     for current_restart in range(restarts):
@@ -94,6 +96,7 @@ def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
             problem.set_state(init_state)
 
         fitness_curve = []
+        l_state_curve = []
         callback_extra_data = None
         if state_fitness_callback is not None:
             callback_extra_data = callback_user_info + [('current_restart', current_restart)]
@@ -136,6 +139,10 @@ def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
             if curve:
                 adjusted_fitness = problem.get_adjusted_fitness()
                 fitness_curve.append(adjusted_fitness)
+            
+            if state_curve:
+                l_state_curve.append(copy.copy(problem.get_state()))
+                
                 
 
             # invoke callback
@@ -159,12 +166,18 @@ def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
             best_state = problem.get_state()
             if curve:
                 best_fitness_curve = [*fitness_curve]
+            if state_curve:
+                best_state_curve =[*l_state_curve]
+                
 
         # break out if we can stop
         if problem.can_stop():
             break
     best_fitness *= problem.get_maximize()
     if curve:
+        if state_curve:
+            return best_state, best_fitness, np.asarray(best_fitness_curve), best_state_curve
+            
         return best_state, best_fitness, np.asarray(best_fitness_curve)
 
     return best_state, best_fitness, None
