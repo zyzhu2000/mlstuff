@@ -112,7 +112,8 @@ class NeuralNetwork(_NNCore, ClassifierMixin):
                  max_attempts=10,
                  random_state=None,
                  curve=False,
-                 pop_breed_percent=0.75):
+                 pop_breed_percent=0.75,
+                 elite_dreg_ratio=0.99):
         super().__init__(
             hidden_nodes=hidden_nodes,
             activation=activation,
@@ -129,5 +130,6 @@ class NeuralNetwork(_NNCore, ClassifierMixin):
             mutation_prob=mutation_prob,
             max_attempts=max_attempts,
             random_state=random_state,
-            curve=curve, pop_breed_percent=pop_breed_percent)
+            curve=curve, pop_breed_percent=pop_breed_percent, 
+            elite_dreg_ratio=elite_dreg_ratio)
 

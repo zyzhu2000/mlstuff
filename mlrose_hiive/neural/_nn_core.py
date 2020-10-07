@@ -27,7 +27,7 @@ class _NNCore(_NNBase):
     def __init__(self, hidden_nodes=None, activation='relu', algorithm='random_hill_climb', max_iters=100, bias=True,
                  is_classifier=True, learning_rate=0.1, early_stopping=False, clip_max=1e+10, restarts=0,
                  schedule=GeomDecay(), pop_size=200, mutation_prob=0.1, max_attempts=10, random_state=None,
-                 curve=False, pop_breed_percent=0.75):
+                 curve=False, pop_breed_percent=0.75, elite_dreg_ratio=0.99):
 
         super().__init__()
         if hidden_nodes is None:
@@ -55,6 +55,7 @@ class _NNCore(_NNBase):
         self.random_state = random_state
         self.curve = curve
         self.pop_breed_percent = pop_breed_percent
+        self.elite_dreg_ratio = elite_dreg_ratio
 
         self.node_list = []
         self.fitted_weights = []
@@ -196,6 +197,7 @@ class _NNCore(_NNBase):
                 pop_size=self.pop_size,
                 mutation_prob=self.mutation_prob,
                 pop_breed_percent=self.pop_breed_percent,
+                elite_dreg_ratio=self.elite_dreg_ratio,
                 max_attempts=self.max_attempts if self.early_stopping else
                 self.max_iters,
                 max_iters=self.max_iters,
@@ -224,7 +226,7 @@ class _NNCore(_NNBase):
                 self.max_iters,
                 max_iters=self.max_iters,
                 init_state=init_weights,
-                curve=self.curve, state_curve=self.curve, tol=1e-4)
+                curve=self.curve, state_curve=self.curve, tol=1e-3)
         else:
             fitted_weights, loss, _ = simulated_annealing(
                 problem,
@@ -233,7 +235,7 @@ class _NNCore(_NNBase):
                 self.max_iters,
                 max_iters=self.max_iters,
                 init_state=init_weights,
-                curve=self.curve, tol=1e-4)
+                curve=self.curve, tol=1e-3)
         return state_curve, fitness_curve, fitted_weights, loss
 
     def __run_with_rhc(self, init_weights, num_nodes, problem):
@@ -262,14 +264,14 @@ class _NNCore(_NNBase):
                                       self.max_iters,
                                       max_iters=self.max_iters,
                                       restarts=1, init_state=init_weights0,
-                                      curve=self.curve, state_curve=self.curve, tol=1e-4, argmax_mode=True)
+                                      curve=self.curve, state_curve=self.curve, tol=1e-3, argmax_mode=False)
             else:
                 current_weights, current_loss, _ = random_hill_climb(
                     problem,
                     max_attempts=self.max_attempts if self.early_stopping
                     else self.max_iters,
                     max_iters=self.max_iters,
-                    restarts=1, init_state=init_weights0, curve=self.curve, tol=1e-4, argmax_mode=True)
+                    restarts=1, init_state=init_weights0, curve=self.curve, tol=1e-3, argmax_mode=False)
 
             if current_loss < loss:
                 fitted_weights = current_weights

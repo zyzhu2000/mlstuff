@@ -215,7 +215,9 @@ class ContinuousOpt(_OptProb):
         
         
         child[mutate] *= 1 + np.random.choice([-1, 1], size=len(mutate)) * self.step
+        #child[mutate] += np.random.normal(0, self.step)
         child[mutate] = np.clip(child[mutate], self.min_val, self.max_val)
+        
         
 
         return child
