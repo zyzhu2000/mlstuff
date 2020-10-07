@@ -98,15 +98,16 @@ def train_sa(learning_rate=0.3, T=1, decay=0.99, early_stopping = True):
     
     return nn_model2, y_train_accuracy, y_valid_accuracy
     
-def train_ga(learning_rate=0.2, pop_size=200, clip_max=1.5, mutation_prob=0.1, pop_breed_pct=0.75, early_stopping = True, max_iters=400,
-             max_attempts=50) :
+def train_ga(learning_rate=0.2, pop_size=200, clip_max=1.5, mutation_prob=0.05, pop_breed_pct=0.75, early_stopping = True, max_iters=400,
+             max_attempts=10) :
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [6], activation = 'relu', 
                                      algorithm = 'genetic_alg', 
                                      max_iters = max_iters, bias = True, is_classifier = True, 
                                      learning_rate = learning_rate,  early_stopping = early_stopping, pop_size=pop_size, clip_max=clip_max,
                                      mutation_prob=mutation_prob,
                                       max_attempts = max_attempts, random_state = 3, curve=True, pop_breed_percent=pop_breed_pct)
-    nn_model2.fit(X_train, y_train, init_weights=init_weights)
+    init = np.random.uniform(-1.5,1.5, size=init_weights.shape)
+    nn_model2.fit(X_train, y_train, init_weights=init)
     # Predict labels for train set and assess accuracy
     y_train_pred = nn_model2.predict(X_train)
     
@@ -172,7 +173,7 @@ if __name__=='__main__':
         show_res(res)
     
     if 1:
-        res = run_grid(train_ga, param_grid=dict(mutation_prob=[ 0.1, 0.2, 0.3]))
+        res = run_grid(train_ga, param_grid=dict(mutation_prob=[0.05] ))
         save("ga-mute.pkl", res)
         show_res(res)
     
@@ -180,7 +181,13 @@ if __name__=='__main__':
         res = run_grid(train_ga, param_grid=dict(clip_max=[0.5, 1, 2, 2.5, 3]))
         save("ga-max.pkl", res)
         show_res(res)
-    
+        
+        
+    if 0:
+        res = run_grid(train_ga, param_grid=dict(learning_rate=[0.22]))
+        save("ga-max.pkl", res)
+        show_res(res)        
+
     
     ii = 0
 
