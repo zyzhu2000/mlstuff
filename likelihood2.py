@@ -7,14 +7,8 @@ from test_harness import *
 
 N = 64
 
-seed = np.random.randint(65565)
-print(seed)
-np.random.seed(seed)
+probs = None
 
-perm = np.arange(N)
-np.random.shuffle(perm)
-
-probs = np.random.uniform(0.4, 0.6, 2*N+1)
     
 def fn_fitness(state:np.ndarray):
     v = 1.0
@@ -44,27 +38,16 @@ class CSequence(FitnessFunction):
         problem = mr.DiscreteOpt(length = N, fitness_fn=fn, maximize=True)
         return problem
 
-
-
-if __name__=='__main__':
-    runs = 50
-    gs = False
+def runner(runs, N_):
+    global N, probs
     
-    if gs:
-        runs = 100
-            
-        suite = TestSuite(0)
-        fn = CSequence()
-        runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=2, decay=0.8),  
-                                    max_attempts = 20, max_iters = 180))
-        
-        search_res = grid_search(suite, runner, param_grid=dict(schedule__init_temp=[0.001, 0.01, 0.1, 1, 10, 100], 
-                                                                schedule__decay=[0.9999, 0.9999, 0.999, 0.99, 0.9, 0.8, 0.5]), runs=runs)
-        s = sorted(search_res.items(), key=lambda x: x[1], reverse=True)
-        for line in s:
-            print(line)
+    seed = np.random.randint(65565)
+    print(seed)
+    np.random.seed(seed)
     
-    ###
+    probs = np.random.uniform(0.4, 0.6, 2*N+1)
+    
+    N = N_
     
     res = {}
     suite = TestSuite(0)
@@ -107,7 +90,33 @@ if __name__=='__main__':
     printdf(pct_time_correct(res, 94), "score-li")
     printdf(resource_report(res), "resource-li")
     
-    with open('li.pkl', 'wb') as f:
+    with open('li-{}.pkl'.format(N), 'wb') as f:
         pkl.dump(res, f)
+    
+
+if __name__=='__main__':
+    runs = 50
+    gs = False
+    
+    if gs:
+        runs = 100
+            
+        suite = TestSuite(0)
+        fn = CSequence()
+        runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=2, decay=0.8),  
+                                    max_attempts = 20, max_iters = 180))
+        
+        search_res = grid_search(suite, runner, param_grid=dict(schedule__init_temp=[0.001, 0.01, 0.1, 1, 10, 100], 
+                                                                schedule__decay=[0.9999, 0.9999, 0.999, 0.99, 0.9, 0.8, 0.5]), runs=runs)
+        s = sorted(search_res.items(), key=lambda x: x[1], reverse=True)
+        for line in s:
+            print(line)
+    
+    ###
+    
+    for i in [16, 32, 48, 64, 80, 90]:
+        runner(runs, i)
+        
+    
         
         

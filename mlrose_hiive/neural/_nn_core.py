@@ -278,7 +278,7 @@ class _NNCore(_NNBase):
                 best_state_curve = state_curve
         return best_state_curve, best_curve, fitted_weights, loss
 
-    def predict(self, X):
+    def predict(self, X, fitted_weights=None):
         """Use model to predict data labels for given feature array.
 
         Parameters
@@ -296,8 +296,11 @@ class _NNCore(_NNBase):
             raise Exception("""The number of columns in X must equal %d"""
                             % ((self.node_list[0] - self.bias),))
 
+        if fitted_weights is None:
+            fitted_weights = self.fitted_weights
+            
         y_pred, pp = self._predict(X=X,
-                                   fitted_weights=self.fitted_weights,
+                                   fitted_weights=fitted_weights,
                                    node_list=self.node_list,
                                    input_activation=self.activation_dict[self.activation],
                                    output_activation=self.output_activation,

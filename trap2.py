@@ -7,14 +7,12 @@ from test_harness import *
 
 N = 30
 
-n0 = np.arange(N, dtype=float)
-weights = 2**n0
     
 def fn_fitness(state:np.ndarray):
     u = np.sum(state)
     a = 70
     b = 100
-    z = 15+3
+    z = 18*N//30
     
     if u<=z:
         v = a/z*(z-u)
@@ -76,32 +74,12 @@ class Trap(FitnessFunction):
         problem = TrapDiscreteOpt(length = N, fitness_fn=fn, maximize=True)
         return problem
 
-
-
-if __name__=='__main__':
-    runs = 50
-    gs = False
-    
-    if gs:
-            
-        suite = TestSuite(0)
-        fn = Trap()
-        runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=2, decay=0.8),  
-                                    max_attempts = 20, equality=True))
-        
-        search_res = grid_search(suite, runner, param_grid=dict(schedule__init_temp=[0.001, 0.01, 0.1, 1, 10, 100, 500, 1000], 
-                                                                schedule__decay=[0.9999, 0.9999, 0.999, 0.99, 0.9, 0.8, 0.5]), runs=runs)
-        s = sorted(search_res.items(), key=lambda x: x[1], reverse=True)
-        for line in s:
-            print(line)
-    
-    ###
-    
+def runner(runs, N_):
+    global N
+    N = N_
     res = {}
 
     suite = TestSuite(0)
-    
-    
     
     fn = Trap()
     runner = RHCRunner(fn, {'restarts':20,  'argmax_mode':True})
@@ -139,7 +117,31 @@ if __name__=='__main__':
     printdf(pct_time_correct(res, 94), "score-tr")
     printdf(resource_report(res), "resource-tr")
     
-    with open('tr.pkl', 'wb') as f:
+    with open('tr-{}.pkl'.format(N_), 'wb') as f:
         pkl.dump(res, f)
+    
+
+
+if __name__=='__main__':
+    runs = 50
+    gs = False
+    
+    if gs:
+            
+        suite = TestSuite(0)
+        fn = Trap()
+        runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=2, decay=0.8),  
+                                    max_attempts = 20, equality=True))
+        
+        search_res = grid_search(suite, runner, param_grid=dict(schedule__init_temp=[0.001, 0.01, 0.1, 1, 10, 100, 500, 1000], 
+                                                                schedule__decay=[0.9999, 0.9999, 0.999, 0.99, 0.9, 0.8, 0.5]), runs=runs)
+        s = sorted(search_res.items(), key=lambda x: x[1], reverse=True)
+        for line in s:
+            print(line)
+    
+    ###
+    for i in [10, 20, 30, 40, 50, 60]:
+        runner(runs, i)
+        
         
         

@@ -44,10 +44,12 @@ class FourPeaks(FitnessFunction):
         return problem
 
 
-
-if __name__=='__main__':
+def runner(runs, N_):
+    global N, T
     
-    runs = 50
+    N = N_
+    T = int(np.ceil(N*0.1))
+    perfect_score = 2*N -T-1
     
     res = {}
     suite = TestSuite(0)
@@ -57,7 +59,7 @@ if __name__=='__main__':
     res['RHC'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
-    print(pct_time_correct(res, 94))
+    print(pct_time_correct(res, perfect_score))
     print(resource_report(res))
     
     
@@ -68,7 +70,7 @@ if __name__=='__main__':
     print(ranks(res))
     print(summary_scores(res))
     
-    print(pct_time_correct(res, 94))
+    print(pct_time_correct(res, perfect_score))
     print(resource_report(res))
     
     fn = FourPeaks()
@@ -76,19 +78,26 @@ if __name__=='__main__':
     res['GA'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
-    print(pct_time_correct(res, 94))
+    print(pct_time_correct(res, perfect_score))
     print(resource_report(res))
     
     
     fn = FourPeaks()
-    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=3000, max_attempts=50))
+    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=1500, max_attempts=50))
     res['MIMIC'] = suite.test(runner, runs)
     printdf(ranks(res), 'ranks')
     printdf(summary_scores(res), "summ")
-    printdf(pct_time_correct(res, 94), "score")
+    printdf(pct_time_correct(res, perfect_score), "score")
     printdf(resource_report(res), "resource")
     
-    with open('4peaks.pkl', 'wb') as f:
+    with open('4peaks-{}.pkl'.format(N_), 'wb') as f:
         pkl.dump(res, f)
+    
+    
+if __name__=='__main__':
+    runs = 50
+    for t in [20, 40, 50, 60, 70]:
+        runner(runs, t)
+    
         
         
