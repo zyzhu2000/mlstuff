@@ -45,9 +45,10 @@ def runner(runs, N_):
     print(seed)
     np.random.seed(seed)
     
+    N = N_
     probs = np.random.uniform(0.4, 0.6, 2*N+1)
     
-    N = N_
+    
     
     res = {}
     suite = TestSuite(0)
