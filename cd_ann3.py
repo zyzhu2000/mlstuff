@@ -172,7 +172,7 @@ if __name__=='__main__':
         show_res(res)
     
     if 1:
-        res = run_grid(train_ga, param_grid=dict(mutation_prob=[ 0.05, 0.1, 0.2, 0.3, 0.4]))
+        res = run_grid(train_ga, param_grid=dict(mutation_prob=[ 0.05, 0.1, 0.2]))
         save("ga-mute.pkl", res)
         show_res(res)
     
