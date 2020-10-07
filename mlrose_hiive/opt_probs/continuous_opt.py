@@ -212,7 +212,7 @@ class ContinuousOpt(_OptProb):
         #for i in mutate:
         #     child[i] = np.random.uniform(self.min_val, self.max_val)
         #child[mutate] = np.random.uniform(self.min_val, self.max_val, size=len(mutate))
-        child[mutate] *= np.random.choice([-1, 1], size=len(mutate)) * self.step
+        child[mutate] *= np.clip(np.random.choice([-1, 1], size=len(mutate)) * self.step, self.min_val, self.max_val)
         
 
         return child
