@@ -287,6 +287,18 @@ def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_pro
                 std.append(np.std(p))
         curves[params] = {'p33':p33, 'p66': p66, 'p50': p50, 'mean': mean, 'std': std}
     return curves
+
+def run_grid(fn, param_grid):
+    keys = list(param_grid.keys())
+    values = list(param_grid.values())
+    
+    res = {}
+    for params in  itertools.product(*values):
+        print('Running {}'.format(params))
+        d = dict(zip(keys, params))
+        res[params] = fn(**d)
+    return keys, res
+    
         
 def printdf(df:pd.DataFrame, filename=None):
     if filename is not None:

@@ -27,7 +27,7 @@ class _NNCore(_NNBase):
     def __init__(self, hidden_nodes=None, activation='relu', algorithm='random_hill_climb', max_iters=100, bias=True,
                  is_classifier=True, learning_rate=0.1, early_stopping=False, clip_max=1e+10, restarts=0,
                  schedule=GeomDecay(), pop_size=200, mutation_prob=0.1, max_attempts=10, random_state=None,
-                 curve=False):
+                 curve=False, pop_breed_percent=0.75):
 
         super().__init__()
         if hidden_nodes is None:
@@ -54,6 +54,7 @@ class _NNCore(_NNBase):
         self.max_attempts = max_attempts
         self.random_state = random_state
         self.curve = curve
+        self.pop_breed_percent = pop_breed_percent
 
         self.node_list = []
         self.fitted_weights = []
@@ -133,7 +134,7 @@ class _NNCore(_NNBase):
 
         num_nodes = self._calculate_state_size(node_list)
 
-        if init_weights is not None and len(init_weights) != num_nodes:
+        if not callable(init_weights) and init_weights is not None and len(init_weights) != num_nodes:
             raise Exception("""init_weights must be None or have length %d"""
                             % (num_nodes,))
 
@@ -194,6 +195,7 @@ class _NNCore(_NNBase):
                 problem,
                 pop_size=self.pop_size,
                 mutation_prob=self.mutation_prob,
+                pop_breed_percent=self.pop_breed_percent,
                 max_attempts=self.max_attempts if self.early_stopping else
                 self.max_iters,
                 max_iters=self.max_iters,
@@ -222,7 +224,7 @@ class _NNCore(_NNBase):
                 self.max_iters,
                 max_iters=self.max_iters,
                 init_state=init_weights,
-                curve=self.curve, state_curve=self.curve)
+                curve=self.curve, state_curve=self.curve, tol=1e-4)
         else:
             fitted_weights, loss, _ = simulated_annealing(
                 problem,
@@ -231,7 +233,7 @@ class _NNCore(_NNBase):
                 self.max_iters,
                 max_iters=self.max_iters,
                 init_state=init_weights,
-                curve=self.curve)
+                curve=self.curve, tol=1e-4)
         return state_curve, fitness_curve, fitted_weights, loss
 
     def __run_with_rhc(self, init_weights, num_nodes, problem):
@@ -239,11 +241,18 @@ class _NNCore(_NNBase):
         state_curve = []
         fitted_weights = []
         loss = np.inf
+        best_state_curve = []
+        best_curve = []
         # Can't use restart feature of random_hill_climb function, since
         # want to keep initial weights in the range -1 to 1.
         for _ in range(self.restarts + 1):
             if init_weights is None:
-                init_weights = np.random.uniform(-1, 1, num_nodes)
+                init_weights0 = np.random.uniform(-1, 1, num_nodes)
+            elif callable(init_weights):
+                init_weights0 = init_weights()
+            else:
+                init_weights0 = init_weights
+                
 
             if self.curve:
                 current_weights, current_loss, fitness_curve, state_curve = \
@@ -252,15 +261,15 @@ class _NNCore(_NNBase):
                                       self.early_stopping else
                                       self.max_iters,
                                       max_iters=self.max_iters,
-                                      restarts=0, init_state=init_weights,
-                                      curve=self.curve, state_curve=self.curve)
+                                      restarts=1, init_state=init_weights0,
+                                      curve=self.curve, state_curve=self.curve, tol=1e-4, argmax_mode=True)
             else:
                 current_weights, current_loss, _ = random_hill_climb(
                     problem,
                     max_attempts=self.max_attempts if self.early_stopping
                     else self.max_iters,
                     max_iters=self.max_iters,
-                    restarts=0, init_state=init_weights, curve=self.curve)
+                    restarts=1, init_state=init_weights0, curve=self.curve, tol=1e-4, argmax_mode=True)
 
             if current_loss < loss:
                 fitted_weights = current_weights

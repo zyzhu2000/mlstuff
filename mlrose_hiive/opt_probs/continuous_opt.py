@@ -209,8 +209,11 @@ class ContinuousOpt(_OptProb):
         rand = np.random.uniform(size=self.length)
         mutate = np.where(rand < mutation_prob)[0]
 
-        for i in mutate:
-            child[i] = np.random.uniform(self.min_val, self.max_val)
+        #for i in mutate:
+        #     child[i] = np.random.uniform(self.min_val, self.max_val)
+        #child[mutate] = np.random.uniform(self.min_val, self.max_val, size=len(mutate))
+        x = child[mutate] + np.random.choice([-1, 1]) * self.step
+        child[mutate] = np.clip(x, self.min_val, self.max_val)
 
         return child
 

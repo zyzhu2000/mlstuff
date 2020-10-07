@@ -32,7 +32,7 @@ def xavier_init(n1, n2):
 
 init_weights  = np.concatenate([xavier_init((X_train.shape[1]+1), 6), xavier_init(6, 1)])
 
-if 1:
+if 0:
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [6], activation = 'relu', 
                                      algorithm = 'gradient_descent', 
@@ -78,7 +78,7 @@ if 0:
     
     print(y_train_accuracy, y_test_accuracy)
 
-if 1:
+if 0:
     
     # Initialize neural network object and fit object - attempt 2
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [6], activation = 'relu', 

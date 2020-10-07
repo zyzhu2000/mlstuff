@@ -15,7 +15,7 @@ from mlrose_hiive.decorators import short_name
 def simulated_annealing(problem, schedule=GeomDecay(), max_attempts=10,
                         max_iters=np.inf, init_state=None, curve=False,
                         random_state=None,
-                        state_fitness_callback=None, callback_user_info=None, equality=False, state_curve=False):
+                        state_fitness_callback=None, callback_user_info=None, equality=False, state_curve=False, tol=0.0):
     """Use simulated annealing to find the optimum for a given
     optimization problem.
     Parameters
@@ -123,7 +123,10 @@ def simulated_annealing(problem, schedule=GeomDecay(), max_attempts=10,
             if (delta_e > 0) or (equality and delta_e==0) or (np.random.uniform() < prob):
                 problem.set_state(next_state)
                 #ll.append((next_state, next_fitness, temp))
-                attempts = 0
+                if abs(delta_e> tol):
+                    attempts = 0
+                else:
+                    attempts += 1
             else:
                 attempts += 1
 

@@ -13,7 +13,7 @@ from mlrose_hiive.decorators import short_name
 def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
                       init_state=None, curve=False, random_state=None,
                       state_fitness_callback=None, callback_user_info=None, argmax_mode=False,
-                      state_curve=False):
+                      state_curve=False, tol=0):
     """Use randomized hill climbing to find the optimum for a given
     optimization problem.
     Parameters
@@ -127,7 +127,10 @@ def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
             current_fitness = problem.get_fitness()
             if next_fitness > current_fitness:
                 problem.set_state(next_state)
-                attempts = 0
+                if abs(next_fitness - current_fitness)>tol:
+                    attempts = 0
+                else:
+                    attempts += 1
                 #ii = 0
                 #l_att = [problem.get_state()]
             else:
