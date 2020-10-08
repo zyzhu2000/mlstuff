@@ -273,6 +273,7 @@ class DiscreteOpt(_OptProb):
 
         # Determine threshold
         theta = np.percentile(self.pop_fitness, 100 * (1 - keep_pct))
+        theta = min(theta, self.pop_fitness.max())
 
         # Determine samples for keeping
         keep_inds = np.where(self.pop_fitness >= theta)[0]

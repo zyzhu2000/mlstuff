@@ -85,7 +85,8 @@ def runner(runs, N_):
     print(resource_report(res))
     
     fn = CSequence()
-    runner = GARunner(fn, dict(max_attempts=8, pop_size=200, pop_breed_percent=0.6, mutation_prob=0.1))
+    #runner = GARunner(fn, dict(max_attempts=50, pop_size=200, pop_breed_percent=0.6, mutation_prob=0.5,  elite_dreg_ratio=0.9))
+    runner = GARunner(fn, dict(max_attempts=50, pop_size=200, pop_breed_percent=0.6, mutation_prob=0.1))
     res['GA'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
@@ -94,7 +95,7 @@ def runner(runs, N_):
     
     
     fn = CSequence()
-    runner = MIMICRunner(fn, dict(keep_pct=0.3, pop_size=600, max_attempts=5))
+    runner = MIMICRunner(fn, dict(keep_pct=0.3, pop_size=500, max_attempts=50))
     res['MIMIC'] = suite.test(runner, runs)
     printdf(ranks(res), 'ranks-li')
     printdf(summary_scores(res), "summ-li")
