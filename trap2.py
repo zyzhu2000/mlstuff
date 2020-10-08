@@ -101,7 +101,7 @@ def runner(runs, N_):
     print(resource_report(res))
     
     fn = Trap()
-    runner = GARunner(fn, dict(max_attempts=50, pop_size=200, pop_breed_percent=0.75, mutation_prob=0.5,  elite_dreg_ratio=0.9))
+    runner = GARunner(fn, dict(max_attempts=10, pop_size=200, pop_breed_percent=0.75, mutation_prob=0.5,  elite_dreg_ratio=0.9))
     res['GA'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
@@ -110,7 +110,7 @@ def runner(runs, N_):
     
     
     fn = Trap()
-    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=200, max_attempts=50))
+    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=200, max_attempts=5))
     res['MIMIC'] = suite.test(runner, runs)
     printdf(ranks(res), 'ranks-tr')
     printdf(summary_scores(res), "summ-tr")

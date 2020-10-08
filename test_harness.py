@@ -54,7 +54,6 @@ class SARunner(Runner):
     
     def run(self, random_state):
         self.fn.reset()
-        self.counter = RHCCounter()
         problem = self.fn.get_problem()
                 
             
