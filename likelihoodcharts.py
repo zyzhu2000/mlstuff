@@ -132,7 +132,7 @@ def make_mimic_keep():
     runs = 5
     suite = TestSuite(0)
     fn = CSequence()
-    runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=500, max_attempts=50))
+    runner = MIMICRunner(fn, dict(keep_pct=0.3, pop_size=500, max_attempts=50))
     
     curves = make_curve(suite, runner, dict(keep_pct=[0.1, 0.2, 0.3, 0.6]), runs=runs, is_product=False, extend=True)
     plt.figure()
