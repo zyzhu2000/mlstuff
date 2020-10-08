@@ -75,7 +75,7 @@ def make_ga_mate():
     fn = CSequence()
     runner = GARunner(fn, dict(max_attempts=8, pop_size=200,  mutation_prob=0.1, elite_dreg_ratio=0.99))
     
-    curves = make_curve(suite, runner, dict(pop_breed_percent=[0.5, 0.6, 0.75, 0.9]), runs=runs, is_product=False, extend=True)
+    curves = make_curve(suite, runner, dict(pop_breed_percent=[0.5, 0.6, 0.7, 0.8, 0.9]), runs=runs, is_product=False, extend=True)
     plt.figure()
     
     for params in curves:
