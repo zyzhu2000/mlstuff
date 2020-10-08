@@ -163,7 +163,7 @@ def make_mimic_pop():
     fn = CSequence()
     runner = MIMICRunner(fn, dict(keep_pct=0.3, pop_size=1000, max_attempts=5))
     
-    curves = make_curve(suite, runner, dict(pop_size=[200, 500, 600, 1000, 1500, 2000]), runs=runs, is_product=False, extend=True)
+    curves = make_curve(suite, runner, dict(pop_size=[200, 400, 600, 1000, 1500, 2000]), runs=runs, is_product=False, extend=True)
     plt.figure()
     
     for params in curves:
