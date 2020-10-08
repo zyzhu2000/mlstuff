@@ -6,8 +6,10 @@ from mrcounter import RHCCounter
 from test_harness import *
 
 N = 64
+seed = np.random.randint(65565)
+print(seed)
 
-probs = None
+probs = np.random.uniform(0.4, 0.6, 2*N+3)
 
 
 def fn_fitness(state:np.ndarray):
@@ -92,7 +94,7 @@ def runner(runs, N_):
     
     
     fn = CSequence()
-    runner = MIMICRunner(fn, dict(keep_pct=0.3, pop_size=1500, max_attempts=50))
+    runner = MIMICRunner(fn, dict(keep_pct=0.3, pop_size=500, max_attempts=50))
     res['MIMIC'] = suite.test(runner, runs)
     printdf(ranks(res), 'ranks-li')
     printdf(summary_scores(res), "summ-li")

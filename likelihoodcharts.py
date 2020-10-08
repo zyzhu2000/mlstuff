@@ -5,12 +5,12 @@ g_interactive = False
 trunk = 'li'
 
 def make_rhc_restarts():
-    runs = 10
+    runs = 25
     suite = TestSuite(0)
     fn = CSequence()
-    runner = RHCRunner(fn, {'restarts':5,  'argmax_mode':True, 'max_iters':50})
+    runner = RHCRunner(fn, {'restarts':5,  'argmax_mode':True, 'max_iters':50, 'max_attempts':50})
         
-    curves = make_curve(suite, runner, dict(restarts=[10, 50, 100]), runs=runs)
+    curves = make_curve(suite, runner, dict(restarts=[5, 10, 30]), runs=runs, extend=True)
     plt.figure()
     
     for params in curves:
@@ -19,12 +19,13 @@ def make_rhc_restarts():
         p66 = curves[params]['p66']
         mean = np.array(curves[params]['mean'])
         std = np.array(curves[params]['std'])
+        tm = curves[params]['time']
         
         x = np.arange(1, len(p50)+1)
-        #p = plt.plot(x, mean, label='restarts={}'.format(params[0]))
-        #plt.fill_between(x, mean-std , mean+std, alpha=0.2, color=p[-1].get_color())
-        p = plt.plot(x, p50, label='restarts={}'.format(params[0]))
-        plt.fill_between(x, p33 , p66, alpha=0.2, color=p[-1].get_color())        
+        p = plt.plot(x, mean, label='restarts={} (time={:.1f} sec)'.format(params[0], tm))
+        plt.fill_between(x, mean-std , mean+std, alpha=0.2, color=p[-1].get_color())
+        #p = plt.plot(x, p50, label='restarts={} (time={:.1f} sec)'.format(params[0], tm))
+        #plt.fill_between(x, p33 , p66, alpha=0.2, color=p[-1].get_color())        
     #plt.title('Effect of Restarts')
     plt.xlabel('Iterations', fontsize=12)
     plt.ylabel('Fitness Score', fontsize=12)
@@ -176,9 +177,9 @@ def make_mimic_pop():
     if g_interactive:
         plt.show()
 
-#make_rhc_restarts()
+make_rhc_restarts()
 #make_sa_params()
 #make_ga_mate()
 #make_ga_mutation()
 #make_mimic_keep()
-make_mimic_pop()
+#make_mimic_pop()

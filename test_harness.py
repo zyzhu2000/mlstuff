@@ -242,7 +242,7 @@ def get_curves(raw_curves, runner_type):
     
     
         
-def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_product=True, cutoff=0.3):
+def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_product=True, cutoff=0.3, extend=False):
     keys = list(param_grid.keys())
     values = list(param_grid.values())
     
@@ -278,6 +278,9 @@ def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_pro
             for i in range(len(l)):
                 if j<len(l[i]):
                     p.append(l[i][j])
+                elif extend:
+                    p.append(l[i][-1])
+                    
             m = max(m, len(p))
             if len(p)>cutoff*m:
                 p33.append(np.percentile(p, 33))
@@ -285,7 +288,8 @@ def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_pro
                 p50.append(np.percentile(p, 50))
                 mean.append(np.mean(p))
                 std.append(np.std(p))
-        curves[params] = {'p33':p33, 'p66': p66, 'p50': p50, 'mean': mean, 'std': std}
+        curves[params] = {'p33':p33, 'p66': p66, 'p50': p50, 'mean': mean, 'std': std, 
+                          'time': np.mean(rec['time']), 'eval': np.mean(rec['evaluations'])}
     return curves
 
 def run_grid(fn, param_grid):
