@@ -51,36 +51,37 @@ problem_cust = mr.DiscreteOpt(length = N, fitness_fn = fitness_cust, maximize=Tr
 
 np.random.seed(0)
 
-
-best_state, best_fitness, curve = mr.random_hill_climb(problem_cust, restarts= 1, argmax_mode=True,   
-                                                       random_state = 1, curve=True)
-
-print(best_state)
-print(best_fitness)
-
-plt.plot(curve)
-plt.show()
-
-
-best_state, best_fitness, curve = mr.simulated_annealing(problem_cust, schedule = mr.GeomDecay(0.1, 0.9, 0.0001), 
-                                                      max_attempts = 20, max_iters = 10000, 
-                                                      random_state = 1, curve=True)
-
-print(best_state)
-print(best_fitness)
-
-plt.plot(curve)
-plt.show()
-
-
-best_state, best_fitness, curve = mr.genetic_alg(problem_cust, random_state = 2, max_attempts=100, pop_size=500, 
-                                                 elite_dreg_ratio=0.9, curve=True)
-
-print(best_state)
-print(best_fitness)
-
-plt.plot(curve)
-plt.show()
+if 0:
+    
+    best_state, best_fitness, curve = mr.random_hill_climb(problem_cust, restarts= 1, argmax_mode=True,   
+                                                           random_state = 1, curve=True)
+    
+    print(best_state)
+    print(best_fitness)
+    
+    plt.plot(curve)
+    plt.show()
+    
+    
+    best_state, best_fitness, curve = mr.simulated_annealing(problem_cust, schedule = mr.GeomDecay(0.1, 0.9, 0.0001), 
+                                                          max_attempts = 20, max_iters = 10000, 
+                                                          random_state = 1, curve=True)
+    
+    print(best_state)
+    print(best_fitness)
+    
+    plt.plot(curve)
+    plt.show()
+    
+    
+    best_state, best_fitness, curve = mr.genetic_alg(problem_cust, random_state = 2, max_attempts=100, pop_size=500, 
+                                                     elite_dreg_ratio=0.9, curve=True)
+    
+    print(best_state)
+    print(best_fitness)
+    
+    plt.plot(curve)
+    plt.show()
 
 best_state, best_fitness, curve = mr.mimic(problem_cust, random_state = 2, max_attempts=100,  curve=True, keep_pct=0.5, pop_size=1000)
 

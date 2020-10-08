@@ -6,7 +6,7 @@ g_interactive = False
 trunk = 'li'
 
 def make_rhc_restarts():
-    runs = 25
+    runs = 100
     suite = TestSuite(0)
     fn = CSequence()
     runner = RHCRunner(fn, {'restarts':5,  'argmax_mode':True, 'max_iters':50, 'max_attempts':50})
@@ -24,7 +24,7 @@ def make_rhc_restarts():
         
         x = np.arange(1, len(p50)+1)
         p = plt.plot(x, mean, label='restarts={} (time={:.1f} sec)'.format(params[0], tm))
-        plt.fill_between(x, mean-std , mean+std, alpha=0.2, color=p[-1].get_color())
+        #plt.fill_between(x, mean-std , mean+std, alpha=0.2, color=p[-1].get_color())
         #p = plt.plot(x, p50, label='restarts={} (time={:.1f} sec)'.format(params[0], tm))
         #plt.fill_between(x, p33 , p66, alpha=0.2, color=p[-1].get_color())        
     #plt.title('Effect of Restarts')
@@ -158,7 +158,7 @@ def make_mimic_keep():
 
 
 def make_mimic_pop():
-    runs = 5
+    runs = 15
     suite = TestSuite(0)
     fn = CSequence()
     runner = MIMICRunner(fn, dict(keep_pct=0.3, pop_size=1000, max_attempts=50))
