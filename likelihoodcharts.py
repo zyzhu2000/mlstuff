@@ -73,7 +73,7 @@ def make_ga_mate():
     runs = 10
     suite = TestSuite(0)
     fn = CSequence()
-    runner = GARunner(fn, dict(max_attempts=50, pop_size=200,   elite_dreg_ratio=0.9))
+    runner = GARunner(fn, dict(max_attempts=8, pop_size=200,  mutation_prob=0.5, elite_dreg_ratio=0.99))
     
     curves = make_curve(suite, runner, dict(pop_breed_percent=[0.5, 0.6, 0.75, 0.9]), runs=runs, is_product=False)
     plt.figure()
@@ -102,7 +102,7 @@ def make_ga_mutation():
     runs = 10
     suite = TestSuite(0)
     fn = CSequence()
-    runner = GARunner(fn, dict(max_attempts=50, pop_size=200,   elite_dreg_ratio=0.9))
+    runner = GARunner(fn, dict(max_attempts=8, pop_size=200, pop_breed_percent=0.6,  elite_dreg_ratio=0.99))
     
     curves = make_curve(suite, runner, dict(mutation_prob=[0.1, 0.3, 0.5, 0.7]), runs=runs, is_product=False)
     plt.figure()
