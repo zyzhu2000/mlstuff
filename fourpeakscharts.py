@@ -9,7 +9,7 @@ def make_4peaks_restarts():
     fn = FourPeaks()
     runner = RHCRunner(fn, {'restarts':5,  'argmax_mode':True})
         
-    curves = make_curve(suite, runner, dict(restarts=[5, 10, 20]), runs=runs)
+    curves = make_curve(suite, runner, dict(restarts=[5, 10, 20]), runs=runs, extend=True)
     plt.figure()
     
     for params in curves:
@@ -18,7 +18,7 @@ def make_4peaks_restarts():
         p66 = curves[params]['p66']
         x = np.arange(1, len(p50)+1)
         p = plt.plot(x, p50, label='restarts={}'.format(params[0]))
-        plt.fill_between(x, p33 , p66, alpha=0.2, color=p[-1].get_color())
+        #plt.fill_between(x, p33 , p66, alpha=0.2, color=p[-1].get_color())
     #plt.title('Effect of Restarts')
     plt.xlabel('Iterations', fontsize=12)
     plt.ylabel('Fitness Score', fontsize=12)
@@ -34,7 +34,8 @@ def make_sa_params():
     runner = SARunner(fn, dict(schedule = mr.GeomDecay(),  
                             max_attempts = 8, max_iters = 1000))
     
-    curves = make_curve(suite, runner, dict(schedule__init_temp=[2, 2, 2, 0.5, 5], schedule__decay=[0.7, 0.8, 0.9,  0.5, 0.999]), runs=runs, is_product=False)
+    curves = make_curve(suite, runner, dict(schedule__init_temp=[2, 2, 2, 0.5, 5], schedule__decay=[0.7, 0.8, 0.9,  0.5, 0.999]), 
+                        runs=runs, is_product=False, extend=True)
     plt.figure()
     
     for params in curves:
@@ -168,9 +169,9 @@ def make_mimic_pop():
     if g_interactive:
         plt.show()
 
-#make_4peaks_restarts()
+make_4peaks_restarts()
 #make_sa_params()
 #make_ga_mate()
 #make_ga_mutation()
-make_mimic_keep()
-make_mimic_pop()
+#make_mimic_keep()
+#make_mimic_pop()
