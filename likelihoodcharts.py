@@ -1,4 +1,6 @@
 import sys
+import matplotlib
+matplotlib.use('pdf')
 
 from likelihood2 import *
 
