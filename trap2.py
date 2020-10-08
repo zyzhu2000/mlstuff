@@ -29,7 +29,7 @@ class TrapDiscreteOpt(mr.DiscreteOpt):
     def random_neighbor(self):
         # equalize the probability of 0->1 and 1->0
         neighbor = np.copy(self.state)
-        if np.random.uniform()<0.042*30/N:
+        if np.random.uniform()<max(0.042*30/N, 0.42):
             for j in range(self.length):
                 neighbor[j] ^= 1      
             return neighbor
