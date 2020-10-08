@@ -1,4 +1,5 @@
-
+import matplotlib
+matplotlib.use('pdf')
 from fourpeaks2 import *
 
 g_interactive = False
