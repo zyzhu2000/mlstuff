@@ -47,6 +47,7 @@ class CSequence(FitnessFunction):
     def get_problem(self):
         fn = mr.CustomFitness(self)
         problem = mr.DiscreteOpt(length = N, fitness_fn=fn, maximize=True)
+        problem.set_mimic_fast_mode(True)
         return problem
 
 def runner(runs, N_):

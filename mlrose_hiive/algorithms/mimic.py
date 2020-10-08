@@ -9,7 +9,6 @@ import copy
 
 from mlrose_hiive.decorators import short_name
 
-
 @short_name('mimic')
 def mimic(problem, pop_size=200, keep_pct=0.2, max_attempts=10,
           max_iters=np.inf, curve=False, random_state=None,

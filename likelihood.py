@@ -48,6 +48,7 @@ fitness_cust = mr.CustomFitness(fn_fitness)
 
 # Define optimization problem object
 problem_cust = mr.DiscreteOpt(length = N, fitness_fn = fitness_cust, maximize=True)
+problem_cust.set_mimic_fast_mode(True)
 
 np.random.seed(0)
 
@@ -82,6 +83,7 @@ if 0:
     
     plt.plot(curve)
     plt.show()
+
 
 best_state, best_fitness, curve = mr.mimic(problem_cust, random_state = 2, max_attempts=100,  curve=True, keep_pct=0.5, pop_size=1000)
 

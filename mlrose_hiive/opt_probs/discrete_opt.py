@@ -70,6 +70,7 @@ class DiscreteOpt(_OptProb):
         self._mut_mask = None
         self._mut_inf = None
 
+    
     def eval_node_probs(self):
         """Update probability density estimates.
         """
@@ -143,9 +144,10 @@ class DiscreteOpt(_OptProb):
         mutual_info = np.zeros([self.length, self.length])
         for i in range(self.length - 1):
             for j in range(i + 1, self.length):
-                mutual_info[i, j] = -1 * mutual_info_score(
+                mutual_info[i, j] = mutual_info_score(
                     self.keep_sample[:, i],
                     self.keep_sample[:, j])
+        mutual_info = -mutual_info
         return mutual_info
 
     # adapted from https://github.com/parkds/mlrose/blob/f7154a1d3e3fdcd934bb3c683b943264d2870fd1/mlrose/algorithms.py
