@@ -13,9 +13,19 @@ np.random.seed(seed)
 perm = np.arange(N)
 np.random.shuffle(perm)
 
-probs = np.random.uniform(0.4, 0.6, 2*N+1)
-    
+probs = np.random.uniform(0.4, 0.6, 2*N+3)
+
 def fn_fitness(state:np.ndarray):
+    j = np.arange(len(state)-1)
+    idx = np.zeros(len(state), dtype=int)
+    idx[1:] = 2*(j+1) + state[:-1] + 1
+    P = probs[idx] * (1-state) + (1- probs[idx])*state
+    lp =  np.mean(np.log(P)) * 64
+    p = np.exp(lp)
+    return p*1e18
+
+    
+def fn_fitness2(state:np.ndarray):
     v = 1.0
     for i, s in enumerate(state):
         if i==0:
@@ -30,6 +40,8 @@ def fn_fitness(state:np.ndarray):
             else:
                 v *= (1-pr)
         p = int(s)
+    v2 = fn_fitness2(state)
+    assert abs(v2-v*1e18)<0.001
     return v*1e18
 
 fitness_cust = mr.CustomFitness(fn_fitness)

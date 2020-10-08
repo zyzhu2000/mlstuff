@@ -41,7 +41,7 @@ class NetworkWeights:
 
     def __init__(self, X, y, node_list, activation, bias=True,
                  is_classifier=True, learning_rate=0.1):
-
+        self.eval_count = 0
         # Make sure y is an array and not a list
         y = np.array(y)
 
@@ -145,6 +145,7 @@ class NetworkWeights:
 
         # Evaluate loss function
         fitness = self.loss(self.y_true, self.y_pred)
+        self.eval_count += 1
 
         return fitness
 

@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as np, sys
 import time, pickle as pkl 
 import matplotlib.pyplot as plt
 import mlrose_hiive as mr
@@ -9,8 +9,18 @@ N = 64
 
 probs = None
 
-    
+
 def fn_fitness(state:np.ndarray):
+    j = np.arange(len(state)-1)
+    idx = np.zeros(len(state), dtype=int)
+    idx[1:] = 2*(j+1) + state[:-1] + 1
+    P = probs[idx] * (1-state) + (1- probs[idx])*state
+    lp =  np.mean(np.log(P)) * 64
+    p = np.exp(lp)
+    return p*1e18
+
+    
+def fn_fitness2(state:np.ndarray):
     v = 1.0
     for i, s in enumerate(state):
         if i==0:
@@ -46,9 +56,7 @@ def runner(runs, N_):
     np.random.seed(seed)
     
     N = N_
-    probs = np.random.uniform(0.4, 0.6, 2*N+1)
-    
-    
+    probs = np.random.uniform(0.4, 0.6, 2*N+3)
     
     res = {}
     suite = TestSuite(0)
@@ -115,8 +123,12 @@ if __name__=='__main__':
     
     ###
     
-    for i in [16, 32, 48, 64, 80, 90]:
-        runner(runs, i)
+    if len(sys.argv)==1:
+        runner(runs, N)
+    else:
+        prob = [int(x) for x in sys.argv[1:]]
+        for i in prob:
+            runner(runs, i)
         
     
         

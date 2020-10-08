@@ -42,11 +42,11 @@ def fn_init_weights():
     return np.concatenate([xavier_init((X_train.shape[1]+1), 6), xavier_init(6, 1)])
 
 
-def train_gd(learning_rate=1e-5):
+def train_gd(learning_rate=1e-5, early_stopping=True):
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [6], activation = 'relu', 
                                      algorithm = 'gradient_descent', 
                                      max_iters = 2000, bias = True, is_classifier = True, 
-                                     learning_rate = learning_rate, early_stopping = True, 
+                                     learning_rate = learning_rate, early_stopping = early_stopping, 
                                      clip_max = 5, max_attempts = 100, random_state = 3, curve=True)
     nn_model2.fit(X_train, y_train, init_weights=init_weights)
     
@@ -60,11 +60,11 @@ def train_gd(learning_rate=1e-5):
     return nn_model2, y_train_accuracy, y_valid_accuracy
     
 
-def train_rhc(learning_rate=0.15, restarts=10):
+def train_rhc(learning_rate=0.15, restarts=10, early_stopping=True):
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [6], activation = 'relu', 
                                      algorithm = 'random_hill_climb', 
                                      max_iters = 2000, bias = True, is_classifier = True, 
-                                     learning_rate = learning_rate, restarts=restarts, early_stopping = True, 
+                                     learning_rate = learning_rate, restarts=restarts, early_stopping = early_stopping, 
                                      clip_max= 1.5,
                                       max_attempts = 100, random_state = 3, curve=True)
     nn_model2.fit(X_train, y_train, init_weights=fn_init_weights)
@@ -97,7 +97,7 @@ def train_sa(learning_rate=0.3, T=1, decay=0.99, early_stopping = True):
     y_valid_accuracy = f1_score(y_valid, y_valid_pred, average="macro")
     
     return nn_model2, y_train_accuracy, y_valid_accuracy
-    
+     
 def train_ga(learning_rate=0.2, pop_size=200, clip_max=1.5, mutation_prob=0.05, pop_breed_pct=0.75, elite_dreg_ratio=0.99, 
              early_stopping = True, max_iters=200,          max_attempts=10) :
     nn_model2 = mr.NeuralNetwork(hidden_nodes = [6], activation = 'relu', 
@@ -127,6 +127,31 @@ def show_res(res):
     for k in res2:
         print(k, res2[k][1], res2[k][2])
 
+def load(filename):
+    with open(filename, 'rb') as f:
+        return pkl.load(f)
+    
+def get_train_validation_curve(res):
+    l_train = []
+    l_valid = []
+    model = res[0]
+    for weights in model.state_curve:
+        y_train_pred = model.predict(X_train, fitted_weights=weights)
+        y_valid_pred = model.predict(X_valid, fitted_weights=weights)
+        y_train_accuracy = f1_score(y_train, y_train_pred, average="macro")
+        y_valid_accuracy = f1_score(y_valid, y_valid_pred, average="macro")
+        
+        l_train.append(y_train_accuracy)
+        l_valid.append(y_valid_accuracy)
+    return np.array(l_train), np.array(l_valid)
+
+
+def get_test_score(res):
+    model = res[0]
+    y_pred = model.predict(X_test)
+    score = f1_score(y_test, y_pred, average="macro")
+    return score
+    
         
 np.random.seed(0)
 
@@ -141,7 +166,7 @@ if __name__=='__main__':
         save("gd.pkl", res)
         show_res(res)
     
-    if 0:
+    if 1:
         res = run_grid(train_rhc, param_grid=dict(learning_rate=[0.4, 0.45, 0.5, 0.55,  0.6]))
         save("rhc.pkl", res)
         show_res(res)
@@ -188,7 +213,7 @@ if __name__=='__main__':
         save("ga-max.pkl", res)
         show_res(res)        
         
-    if 1:
+    if 0:
         res = run_grid(train_ga, param_grid=dict(elite_dreg_ratio=[0.999,0.995]))
         save("ga-max.pkl", res)
         show_res(res)        

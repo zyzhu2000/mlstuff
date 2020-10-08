@@ -51,7 +51,7 @@ def genetic_alg(problem, pop_size=200, pop_breed_percent=0.75, elite_dreg_ratio=
                 minimum_elites=0, minimum_dregs=0, mutation_prob=0.1,
                 max_attempts=10, max_iters=np.inf, curve=False, random_state=None,
                 state_fitness_callback=None, callback_user_info=None,
-                hamming_factor=0.0, hamming_decay_factor=None, state_curve=False):
+                hamming_factor=0.0, hamming_decay_factor=None, state_curve=False, tol=1e-4):
     """Use a standard genetic algorithm to find the optimum for a given
     optimization problem.
     Parameters
@@ -217,7 +217,10 @@ def genetic_alg(problem, pop_size=200, pop_breed_percent=0.75, elite_dreg_ratio=
         current_fitness = problem.get_fitness()
         if next_fitness > current_fitness:
             problem.set_state(next_state)
-            attempts = 0
+            if next_fitness - current_fitness > tol:
+                attempts = 0
+            else:
+                attempts += 1
         else:
             attempts += 1
 
