@@ -104,7 +104,7 @@ def make_ga_mutation():
     fn = CSequence()
     runner = GARunner(fn, dict(max_attempts=8, pop_size=200, pop_breed_percent=0.6,  elite_dreg_ratio=0.99))
     
-    curves = make_curve(suite, runner, dict(mutation_prob=[0.1, 0.3, 0.5, 0.7]), runs=runs, is_product=False, extend=True)
+    curves = make_curve(suite, runner, dict(mutation_prob=[0.02, 0.05, 0.1, 0.3, 0.5, 0.7]), runs=runs, is_product=False, extend=True)
     plt.figure()
     
     for params in curves:
