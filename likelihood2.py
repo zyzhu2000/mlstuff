@@ -6,8 +6,7 @@ from mrcounter import RHCCounter
 from test_harness import *
 
 N = 64
-seed = np.random.randint(65565)
-print(seed)
+seed = np.random.seed(65565)
 
 probs = np.random.uniform(0.4, 0.6, 2*N+3)
 

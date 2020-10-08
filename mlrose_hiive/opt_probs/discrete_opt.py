@@ -274,6 +274,8 @@ class DiscreteOpt(_OptProb):
 
         # Determine samples for keeping
         keep_inds = np.where(self.pop_fitness >= theta)[0]
+        if len(keep_inds)<=0:
+            ii = 0
 
         # Determine sample for keeping
         self.keep_sample = self.population[keep_inds]

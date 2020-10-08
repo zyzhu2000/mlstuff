@@ -183,7 +183,7 @@ class _NNCore(_NNBase):
             max_attempts=self.max_attempts if self.early_stopping else self.max_iters,
             max_iters=self.max_iters,
             curve=self.curve,
-            init_state=init_weights, tol=1e-4)
+            init_state=init_weights, tol=5e-5)
         
         if fitness_curve is not None:
             return state_curve, fitness_curve, fitted_weights, loss
@@ -202,7 +202,7 @@ class _NNCore(_NNBase):
                 max_attempts=self.max_attempts if self.early_stopping else
                 self.max_iters,
                 max_iters=self.max_iters,
-                curve=self.curve, state_curve=self.curve, tol=1e-4)
+                curve=self.curve, state_curve=self.curve, tol=5e-5)
         else:
             fitted_weights, loss, _ = genetic_alg(
                 problem,
@@ -210,7 +210,7 @@ class _NNCore(_NNBase):
                 max_attempts=self.max_attempts if self.early_stopping else
                 self.max_iters,
                 max_iters=self.max_iters,
-                curve=self.curve, tol=1e-4)
+                curve=self.curve, tol=5e-5)
         return state_curve, fitness_curve, fitted_weights, loss
 
     def _run_with_sa(self, init_weights, num_nodes, problem):
@@ -227,7 +227,7 @@ class _NNCore(_NNBase):
                 self.max_iters,
                 max_iters=self.max_iters,
                 init_state=init_weights,
-                curve=self.curve, state_curve=self.curve, tol=1e-4)
+                curve=self.curve, state_curve=self.curve, tol=5e-5)
         else:
             fitted_weights, loss, _ = simulated_annealing(
                 problem,
@@ -265,14 +265,14 @@ class _NNCore(_NNBase):
                                       self.max_iters,
                                       max_iters=self.max_iters,
                                       restarts=1, init_state=init_weights0,
-                                      curve=self.curve, state_curve=self.curve, tol=1e-4, argmax_mode=False)
+                                      curve=self.curve, state_curve=self.curve, tol=5e-5, argmax_mode=False)
             else:
                 current_weights, current_loss, _ = random_hill_climb(
                     problem,
                     max_attempts=self.max_attempts if self.early_stopping
                     else self.max_iters,
                     max_iters=self.max_iters,
-                    restarts=1, init_state=init_weights0, curve=self.curve, tol=1e-4, argmax_mode=False)
+                    restarts=1, init_state=init_weights0, curve=self.curve, tol=5e-5, argmax_mode=False)
 
             if current_loss < loss:
                 fitted_weights = current_weights
