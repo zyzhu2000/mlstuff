@@ -1,3 +1,4 @@
+import sys
 
 from likelihood2 import *
 
@@ -32,7 +33,8 @@ def make_rhc_restarts():
     plt.grid()
     plt.legend(fontsize=12)
     plt.savefig('{}-restarts.pdf'.format(trunk))
-    plt.show()
+    if g_interactive:
+        plt.show()
 
 def make_sa_params():
     runs = 50
@@ -62,7 +64,9 @@ def make_sa_params():
     plt.grid()
     plt.legend(fontsize=12)
     plt.savefig('{}-sa-params.pdf'.format(trunk))
-    plt.show()
+    if g_interactive:
+        plt.show()
+
 
 
 def make_ga_mate():
@@ -90,7 +94,9 @@ def make_ga_mate():
     plt.grid()
     plt.legend(fontsize=12)
     plt.savefig('{}-sa-breed.pdf'.format(trunk))
-    plt.show()
+    if g_interactive:
+        plt.show()
+
 
 def make_ga_mutation():
     runs = 10
@@ -117,16 +123,18 @@ def make_ga_mutation():
     plt.grid()
     plt.legend(fontsize=12)
     plt.savefig('{}-ga-mutation.pdf'.format(trunk))
-    plt.show()
+    if g_interactive:
+        plt.show()
+
 
 
 def make_mimic_keep():
     runs = 5
     suite = TestSuite(0)
     fn = CSequence()
-    runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=1000, max_attempts=50))
+    runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=500, max_attempts=50))
     
-    curves = make_curve(suite, runner, dict(keep_pct=[0.05, 0.1, 0.2, 0.3, 0.6]), runs=runs, is_product=False)
+    curves = make_curve(suite, runner, dict(keep_pct=[0.05, 0.1, 0.2, 0.3, 0.6]), runs=runs, is_product=False, extend=True)
     plt.figure()
     
     for params in curves:
@@ -155,7 +163,7 @@ def make_mimic_pop():
     fn = CSequence()
     runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=1000, max_attempts=50))
     
-    curves = make_curve(suite, runner, dict(pop_size=[200, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000]), runs=runs, is_product=False)
+    curves = make_curve(suite, runner, dict(pop_size=[200, 500, 1000, 1500]), runs=runs, is_product=False, extend=True)
     plt.figure()
     
     for params in curves:
@@ -164,9 +172,10 @@ def make_mimic_pop():
         p66 = curves[params]['p66']
         mean = np.array(curves[params]['mean'])
         std = np.array(curves[params]['std'])
+        tm = curves[params]['time']
         
         x = np.arange(1, len(p50)+1)
-        p = plt.plot(x, mean, label='pop={}'.format(*params))
+        p = plt.plot(x, mean, label='pop={} (time={:.1f} sec)'.format(params[0], tm))
         #plt.fill_between(x, mean-std , mean+std, alpha=0.2, color=p[-1].get_color())
     #plt.title('Effect of Restarts')
     plt.xlabel('Iterations', fontsize=12)
@@ -177,9 +186,16 @@ def make_mimic_pop():
     if g_interactive:
         plt.show()
 
-make_rhc_restarts()
-#make_sa_params()
-#make_ga_mate()
-#make_ga_mutation()
-#make_mimic_keep()
-#make_mimic_pop()
+arg = sys.argv[1]
+if arg=='restart':
+    make_rhc_restarts()
+elif arg=='sa':
+    make_sa_params()
+elif arg=='mate':
+    make_ga_mate()
+elif arg=='mutation':
+    make_ga_mutation()
+elif arg=='keep':
+    make_mimic_keep()
+elif arg=='pop':
+    make_mimic_pop()

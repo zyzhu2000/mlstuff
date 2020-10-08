@@ -110,7 +110,7 @@ def runner(runs, N_):
     
     
     fn = Trap()
-    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=500, max_attempts=50))
+    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=200, max_attempts=50))
     res['MIMIC'] = suite.test(runner, runs)
     printdf(ranks(res), 'ranks-tr')
     printdf(summary_scores(res), "summ-tr")
