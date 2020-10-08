@@ -157,8 +157,11 @@ def make_mimic_pop():
         mean = np.array(curves[params]['mean'])
         std = np.array(curves[params]['std'])
         
+        tm = curves[params]['time']
+        
         x = np.arange(1, len(p50)+1)
-        p = plt.plot(x, mean, label='pop={}'.format(*params))
+        p = plt.plot(x, mean, label='pop={} (time={:.1f} sec)'.format(params[0], tm))        
+        
         #plt.fill_between(x, mean-std , mean+std, alpha=0.2, color=p[-1].get_color())
     #plt.title('Effect of Restarts')
     plt.xlabel('Iterations', fontsize=12)
@@ -169,9 +172,9 @@ def make_mimic_pop():
     if g_interactive:
         plt.show()
 
-make_4peaks_restarts()
+#make_4peaks_restarts()
 #make_sa_params()
 #make_ga_mate()
 #make_ga_mutation()
 #make_mimic_keep()
-#make_mimic_pop()
+make_mimic_pop()
