@@ -22,7 +22,7 @@ def tail(state, val):
     return head(state[::-1], val)
 
 def fn_fitness(state:np.ndarray):
-    head1 = min(head(state, 1), T+1)
+    head1 = min(head(state, 1), T)
     tail0 = tail(state, 0)
     
     reward = 0
@@ -97,8 +97,9 @@ def runner(runs, N_):
     
 if __name__=='__main__':
     runs = 50
-    for t in [20, 40, 50, 60, 70]:
-        runner(runs, t)
+    runner(runs, 50)
+    #for t in [20, 40, 50, 60, 70]:
+    #    runner(runs, t)
     
         
         
