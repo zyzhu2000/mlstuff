@@ -8,7 +8,7 @@ from test_harness import *
 
 
 N = 50
-T = 5
+T = 6
 K = 0.05
 
 def head(state, val):
@@ -31,9 +31,9 @@ def fn_fitness(state:np.ndarray):
         reward = N
     
     threshold = np.floor(T*K)
-    #v = max(tail0, min(head1, threshold))
-    v = tail0 - head1
-    return reward + v
+    v = max(tail0, min(head1, threshold))
+    
+    return reward + v 
 
 
 
@@ -88,7 +88,7 @@ def runner(runs, N_):
     
     
     fn = FourPeaks()
-    runner = MIMICRunner(fn, dict(keep_pct=0.15, pop_size=2000, max_attempts=10))
+    runner = MIMICRunner(fn, dict(keep_pct=0.05, pop_size=2000, max_attempts=10))
     res['MIMIC'] = suite.test(runner, runs)
     printdf(ranks(res), 'ranks')
     printdf(summary_scores(res), "summ")
