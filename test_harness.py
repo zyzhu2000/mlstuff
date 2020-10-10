@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as np, pickle as pkl
 import typing, itertools, importlib
 import time 
 import scipy.stats
@@ -170,7 +170,10 @@ def summary_scores(rec):
     df = pd.DataFrame.from_dict(d, orient='index', columns=['mean', 'std', 'min', '25 pct', '50 pct', '75 pct', 'max'])
     return df
 
-
+def load_model(filename):
+    with open(filename, 'rb') as f:
+        return pkl.load(f)
+    
 
 def pct_time_correct(rec, truth):
     algos = list(rec.keys())
@@ -217,7 +220,17 @@ def get_curves(raw_curves, runner_type):
     M = 0
     for curve in raw_curves:
         if runner_type.lower()=='rhc':
-            curve = curve[-1]        
+                best_curve = None
+                best_val = float('-inf')
+                best_length = None
+                for c in curve:
+                    if c[-1] > best_val or c[-1] == best_val and best_length<len(c):
+                        best_length = len(c)
+                        best_val = c[-1]
+                        best_curve = c
+                        
+                curve = best_curve
+
         l.append(curve)
         M = max(M, len(curve))
     
@@ -231,6 +244,8 @@ def get_curves(raw_curves, runner_type):
         for i in range(len(l)):
             if j<len(l[i]):
                 p.append(l[i][j])
+            else:
+                p.append(l[i][-1])
         p33.append(np.percentile(p, 33))
         p66.append(np.percentile(p, 66))
         p50.append(np.percentile(p, 50))
@@ -262,7 +277,16 @@ def make_curve(suite:TestSuite, runner:Runner, param_grid:dict, runs:int, is_pro
         M = 0
         for curve in rec['curves']:
             if isinstance(runner, RHCRunner):
-                curve = curve[-1]        
+                best_curve = None
+                best_val = float('-inf')
+                best_length = None
+                for c in curve:
+                    if c[-1] > best_val or c[-1] == best_val and best_length<len(c):
+                        best_length = len(c)
+                        best_val = c[-1]
+                        best_curve = c
+                        
+                curve = best_curve
             l.append(curve)
             M = max(M, len(curve))
         
