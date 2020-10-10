@@ -105,7 +105,7 @@ def runner(runs, N_):
     print(resource_report(res))
     
     fn = Trap()
-    runner = GARunner(fn, dict(max_attempts=10, pop_size=200, pop_breed_percent=0.75, mutation_prob=0.5,  elite_dreg_ratio=0.9))
+    runner = GARunner(fn, dict(max_attempts=10, pop_size=200, pop_breed_percent=0.75, mutation_prob=0.0,  elite_dreg_ratio=0.99))
     res['GA'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))

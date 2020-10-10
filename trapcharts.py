@@ -130,10 +130,10 @@ def make_ga_mate():
     plt.show()
 
 def make_ga_mutation():
-    runs = 30
+    runs = 5
     suite = TestSuite(0)
     fn = Trap()
-    runner = GARunner(fn, dict(max_attempts=50, pop_size=200,   elite_dreg_ratio=0.9))
+    runner = GARunner(fn, dict(max_attempts=50, pop_size=200,   elite_dreg_ratio=0.99))
     
     curves = make_curve(suite, runner, dict(mutation_prob=[0., 0.01, 0.05, 0.1, 0.15]), runs=runs, is_product=False)
     plt.figure()
