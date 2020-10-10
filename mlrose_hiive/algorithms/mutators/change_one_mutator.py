@@ -19,5 +19,8 @@ class ChangeOneMutator(_MutatorBase):
             # do change one mutation
             m = np.random.randint(len(child))
 
-            child[m] = np.random.randint(self._max_val)
+            #child[m] = np.random.randint(self._max_val)
+            child[m] = int(child[m])^1
         return child
+
+

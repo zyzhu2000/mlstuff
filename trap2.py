@@ -25,6 +25,8 @@ def fn_fitness(state:np.ndarray):
 class TrapDiscreteOpt(mr.DiscreteOpt):
     def __init__(self, length, fitness_fn, maximize):
         super().__init__(length = length, fitness_fn=fitness_fn, maximize=maximize)
+        mutator = mr.ChangeOneMutator(self)
+        self._mutator = mutator
         
     def random_neighbor(self):
         # equalize the probability of 0->1 and 1->0
@@ -71,6 +73,7 @@ class Trap(FitnessFunction):
     def get_problem(self):
         fn = mr.CustomFitness(self)
         #problem = mr.DiscreteOpt(length = N, fitness_fn=fn, maximize=True)
+        
         problem = TrapDiscreteOpt(length = N, fitness_fn=fn, maximize=True)
         return problem
 
@@ -91,8 +94,8 @@ def runner(runs, N_):
     
     
     fn = Trap()
-    runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=15, decay=0.99),  
-                                max_attempts = 20))
+    runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=4, decay=0.99),  
+                                max_attempts = 16))
     res['SA'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))

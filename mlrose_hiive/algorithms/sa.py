@@ -102,7 +102,7 @@ def simulated_annealing(problem, schedule=GeomDecay(), max_attempts=10,
         temp = schedule.evaluate(iters)
         iters += 1
 
-        if temp == 0:
+        if temp <= 0:
             break
 
         else:

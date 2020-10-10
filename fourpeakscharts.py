@@ -29,14 +29,14 @@ def make_4peaks_restarts():
     plt.show()
 
 def make_sa_params():
-    runs = 100
+    runs = 10
     suite = TestSuite(0)
     fn = FourPeaks()
     runner = SARunner(fn, dict(schedule = mr.GeomDecay(),  
-                            max_attempts = 8, max_iters = 1000))
+                            max_attempts = 400, max_iters = 10000))
     
-    curves = make_curve(suite, runner, dict(schedule__init_temp=[2, 2, 2, 0.5, 5], schedule__decay=[0.7, 0.8, 0.9,  0.5, 0.999]), 
-                        runs=runs, is_product=False, extend=True)
+    curves = make_curve(suite, runner, dict(schedule__init_temp=[1,2,5], schedule__decay=[0.9, 0.99, 0.999]), 
+                        runs=runs, is_product=True, extend=True)
     plt.figure()
     
     for params in curves:
@@ -56,15 +56,45 @@ def make_sa_params():
     plt.legend(fontsize=12)
     plt.savefig('fpeaks-sa-params.pdf')
     plt.show()
+    
+def make_sa_params2():
+    runs = 20
+    suite = TestSuite(0)
+    fn = FourPeaks()
+    runner = SARunner(fn, dict(schedule = mr.GeomDecay(2, 0.9),  
+                            max_attempts = 20, max_iters = 2000))
+    
+    curves = make_curve(suite, runner, dict(max_attempts=[50, 100,  200, 400, 600]), 
+                        runs=runs, is_product=False, extend=True)
+    plt.figure()
+    
+    for params in curves:
+        p50 = curves[params]['p50']
+        p33 = curves[params]['p33']
+        p66 = curves[params]['p66']
+        mean = np.array(curves[params]['mean'])
+        std = np.array(curves[params]['std'])
+        
+        x = np.arange(1, len(p50)+1)
+        p = plt.plot(x, mean, label='attempts={}'.format(*params))
+        #plt.fill_between(x, mean-std , mean+std, alpha=0.2, color=p[-1].get_color())
+    #plt.title('Effect of Restarts')
+    plt.xlabel('Iterations', fontsize=12)
+    plt.ylabel('Fitness Score', fontsize=12)
+    plt.grid()
+    plt.legend(fontsize=12)
+    plt.savefig('fpeaks-sa-attempts.pdf')
+    plt.show()
+    
 
 
 def make_ga_mate():
-    runs = 10
+    runs = 20
     suite = TestSuite(0)
     fn = FourPeaks()
-    runner = GARunner(fn, dict(max_attempts=50, pop_size=200,   elite_dreg_ratio=0.9))
+    runner = GARunner(fn, dict(max_attempts=50, pop_size=200,  pop_breed_percent=0.75, mutation_prob=0.6, elite_dreg_ratio=0.9))
     
-    curves = make_curve(suite, runner, dict(pop_breed_percent=[0.5, 0.6, 0.75, 0.9]), runs=runs, is_product=False)
+    curves = make_curve(suite, runner, dict(pop_breed_percent=[0.5, 0.6, 0.75, 0.9, 0.95]), runs=runs, is_product=False, extend=True)
     plt.figure()
     
     for params in curves:
@@ -89,9 +119,9 @@ def make_ga_mutation():
     runs = 10
     suite = TestSuite(0)
     fn = FourPeaks()
-    runner = GARunner(fn, dict(max_attempts=50, pop_size=200,   elite_dreg_ratio=0.9))
+    runner = GARunner(fn, dict(max_attempts=50, pop_size=200, pop_breed_percent=0.75, mutation_prob=0.6,  elite_dreg_ratio=0.9))
     
-    curves = make_curve(suite, runner, dict(mutation_prob=[0.01, 0.1, 0.5, 0.6, 0.7]), runs=runs, is_product=False)
+    curves = make_curve(suite, runner, dict(mutation_prob=[0.01, 0.1, 0.5, 0.6, 0.7]), runs=runs, is_product=False, extend=True)
     plt.figure()
     
     for params in curves:
@@ -175,7 +205,8 @@ def make_mimic_pop():
 
 #make_4peaks_restarts()
 #make_sa_params()
-#make_ga_mate()
-#make_ga_mutation()
+#make_sa_params2()
+make_ga_mate()
+make_ga_mutation()
 #make_mimic_keep()
-make_mimic_pop()
+#make_mimic_pop()

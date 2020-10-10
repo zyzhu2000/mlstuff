@@ -43,11 +43,11 @@ def make_sa_params():
     suite = TestSuite(0)
     fn = CSequence()
     runner = SARunner(fn, dict(schedule = mr.GeomDecay(),  
-                            max_attempts = 8, max_iters = 180))
+                            max_attempts = 400, max_iters = 10000))
     
-    curves = make_curve(suite, runner, dict(schedule__init_temp=[1, 1, 10, 10, 10, 100, 100], schedule__decay=[0.1, 0.5, 0.1, 0.5, 0.7, 0.1, 0.5]), 
+    curves = make_curve(suite, runner, dict(schedule__init_temp=[1, 10, 100], schedule__decay=[0.7, 0.9, 0.99]), 
                         runs=runs, 
-                        is_product=False, cutoff=0.3)
+                        is_product=True, extend=True)
     plt.figure()
     
     for params in curves:
@@ -69,6 +69,37 @@ def make_sa_params():
     if g_interactive:
         plt.show()
 
+
+def make_sa_attempts():
+    runs = 50
+    suite = TestSuite(0)
+    fn = CSequence()
+    runner = SARunner(fn, dict(schedule = mr.GeomDecay(1, 0.9),  
+                            max_attempts = 8, max_iters = 10000))
+    
+    curves = make_curve(suite, runner, dict(max_attempts=[50, 100, 200, 300, 400, 500]), 
+                        runs=runs, 
+                        is_product=False, extend=True)
+    plt.figure()
+    
+    for params in curves:
+        p50 = curves[params]['p50']
+        p33 = curves[params]['p33']
+        p66 = curves[params]['p66']
+        mean = np.array(curves[params]['mean'])
+        std = np.array(curves[params]['std'])
+        
+        x = np.arange(1, len(p50)+1)
+        p = plt.plot(x, mean, label='attempts={}'.format(*params), alpha=0.8)
+        #plt.fill_between(x, mean-std , mean+std, alpha=0.2, color=p[-1].get_color())
+    #plt.title('Effect of Restarts')
+    plt.xlabel('Iterations', fontsize=12)
+    plt.ylabel('Fitness Score', fontsize=12)
+    plt.grid()
+    plt.legend(fontsize=12)
+    plt.savefig('{}-sa-attempts.pdf'.format(trunk))
+    if g_interactive:
+        plt.show()
 
 
 def make_ga_mate():
@@ -193,6 +224,8 @@ if arg=='restart':
     make_rhc_restarts()
 elif arg=='sa':
     make_sa_params()
+elif arg=='saattempt':
+    make_sa_attempts()
 elif arg=='mate':
     make_ga_mate()
 elif arg=='mutation':

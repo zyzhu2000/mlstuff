@@ -81,8 +81,8 @@ def runner(runs, N_):
     
     
     fn = CSequence()
-    runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=1, decay=0.1),  
-                                max_attempts = 8, max_iters = 1000))
+    runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=1, decay=0.9),  
+                                max_attempts = 400, max_iters = 1000))
     res['SA'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
