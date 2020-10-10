@@ -177,5 +177,5 @@ def make_mimic_pop():
 #make_sa_params()
 #make_ga_mate()
 #make_ga_mutation()
-make_mimic_keep()
+#make_mimic_keep()
 make_mimic_pop()
