@@ -28,7 +28,7 @@ def fn_fitness(state:np.ndarray):
     reward = 0
     if tail0 > T and head1 >T:
         reward = N
-    v = max(tail0, min(head1, T))
+    v = max(tail0, min(head1, T-1))
     return reward + v
 
 
