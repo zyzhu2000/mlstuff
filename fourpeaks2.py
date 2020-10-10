@@ -9,6 +9,7 @@ from test_harness import *
 
 N = 50
 T = 5
+K = 0.08
 
 def head(state, val):
     idx = np.nonzero(state==val^1)[0]
@@ -28,7 +29,9 @@ def fn_fitness(state:np.ndarray):
     reward = 0
     if tail0 > T and head1 >T:
         reward = N
-    v = max(tail0, head1)
+    
+    threshold = np.floor(T*K)
+    v = max(tail0, min(head1, threshold))
     return reward + v
 
 
@@ -56,7 +59,7 @@ def runner(runs, N_):
     suite = TestSuite(0)
     
     fn = FourPeaks()
-    runner = RHCRunner(fn, {'restarts':20,  'argmax_mode':True})
+    runner = RHCRunner(fn, {'restarts':20,  'argmax_mode':False, max_attempts:8})
     res['RHC'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
@@ -97,8 +100,15 @@ def runner(runs, N_):
     
 if __name__=='__main__':
     runs = 50
-    for t in [20, 40, 50, 60, 70]:
-        runner(runs, t)
+    #for t in [20, 40, 50, 60, 70]:
+    #    runner(runs, t)
+    if len(sys.argv)==1:
+        runner(runs, N)
+    else:
+        prob = [int(x) for x in sys.argv[1:]]
+        for i in prob:
+            runner(runs, i)
+    
     
         
         

@@ -24,7 +24,7 @@ def fn_fitness(state:np.ndarray):
     reward = 0
     if tail0 > T and head1 >T:
         reward = N
-    v = max(tail0, head1)
+    v = max(tail0, min(head1, T-1))
     return reward + v
 
 #init_state = np.zeros(N)
@@ -37,14 +37,18 @@ fitness_cust = mr.CustomFitness(fn_fitness)
 problem_cust = mr.DiscreteOpt(length = N, fitness_fn = fitness_cust, maximize=True, max_val = 2)
 
 
+best_state, best_fitness, curve = mr.random_hill_climb(problem_cust, restarts=10,     random_state = 0, curve=True, argmax_mode=False)
+print("RHC")
+print(best_state)
+print(best_fitness)
 
 
 
 
-#init_state = np.zeros(N)
-#best_state, best_fitness, curve = mr.simulated_annealing(problem_cust, schedule = mr.ExpDecay(10, exp_const=0.01), 
-                                                      #max_attempts = 10, max_iters = 10000, 
-                                                       #random_state = 2, curve=True)
+init_state = np.zeros(N)
+best_state, best_fitness, curve = mr.simulated_annealing(problem_cust, schedule = mr.ExpDecay(10, exp_const=0.01), 
+                                                      max_attempts = 10, max_iters = 10000, 
+                                                      random_state = 2, curve=True)
 ##print(fn_fitness(init_state))
 #print("SA")
 #print(best_state)
