@@ -8,7 +8,7 @@ def make_4peaks_restarts():
     runs = 10
     suite = TestSuite(0)
     fn = FourPeaks()
-    runner = RHCRunner(fn, {'restarts':5,  'argmax_mode':True})
+    runner = RHCRunner(fn, {'restarts':5,  'argmax_mode':False})
         
     curves = make_curve(suite, runner, dict(restarts=[5, 10, 20]), runs=runs, extend=True)
     plt.figure()
@@ -18,7 +18,7 @@ def make_4peaks_restarts():
         p33 = curves[params]['p33']
         p66 = curves[params]['p66']
         x = np.arange(1, len(p50)+1)
-        p = plt.plot(x, p50, label='restarts={}'.format(params[0]))
+        p = plt.plot(x, p50, label='restarts={}'.format(params[0]), alpha=0.8)
         #plt.fill_between(x, p33 , p66, alpha=0.2, color=p[-1].get_color())
     #plt.title('Effect of Restarts')
     plt.xlabel('Iterations', fontsize=12)
@@ -177,5 +177,5 @@ def make_mimic_pop():
 #make_sa_params()
 #make_ga_mate()
 #make_ga_mutation()
-#make_mimic_keep()
-make_mimic_pop()
+make_mimic_keep()
+#make_mimic_pop()
