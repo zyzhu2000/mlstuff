@@ -75,6 +75,7 @@ class Trap(FitnessFunction):
         #problem = mr.DiscreteOpt(length = N, fitness_fn=fn, maximize=True)
         
         problem = TrapDiscreteOpt(length = N, fitness_fn=fn, maximize=True)
+        problem.set_mimic_fast_mode(True)
         return problem
 
 def runner(runs, N_):
