@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as np, sys
 import time, pickle as pkl 
 import matplotlib.pyplot as plt
 import mlrose_hiive as mr
