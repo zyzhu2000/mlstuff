@@ -7,11 +7,15 @@ from test_harness import *
 
 N = 64
 seed = np.random.seed(65565)
+perm = np.arange(N)
+np.random.shuffle(perm)
+
 
 probs = np.random.uniform(0.4, 0.6, 2*N+3)
 
 
 def fn_fitness(state:np.ndarray):
+    state = state[perm]
     j = np.arange(len(state)-1)
     idx = np.zeros(len(state), dtype=int)
     idx[1:] = 2*(j+1) + state[:-1] + 1
@@ -51,7 +55,7 @@ class CSequence(FitnessFunction):
         return problem
 
 def runner(runs, N_):
-    global N, probs
+    global N, probs, perm
     
     seed = np.random.randint(65565)
     print(seed)
@@ -59,6 +63,8 @@ def runner(runs, N_):
     
     N = N_
     probs = np.random.uniform(0.4, 0.6, 2*N+3)
+    perm = np.arange(N)
+    np.random.shuffle(perm)
     
     res = {}
     suite = TestSuite(0)
