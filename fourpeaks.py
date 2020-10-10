@@ -59,7 +59,7 @@ best_state, best_fitness, curve = mr.genetic_alg(problem_cust, random_state = 2,
 #print(best_fitness)
 
 
-best_state, best_fitness, curve = mr.mimic(problem_cust, random_state = 20, max_attempts=20,  curve=True, keep_pct=0.2, pop_size=2500)
+best_state, best_fitness, curve = mr.mimic(problem_cust, random_state = 20, max_attempts=20,  curve=True, keep_pct=0.2, pop_size=1500)
 
 print(best_state)
 print(best_fitness)
