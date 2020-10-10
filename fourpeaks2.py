@@ -8,8 +8,8 @@ from test_harness import *
 
 
 N = 50
-T = 6
-K = 0.05
+T = 5
+K = 0.08
 
 def head(state, val):
     idx = np.nonzero(state==val^1)[0]
