@@ -114,10 +114,10 @@ def make_ga_mutation():
 
 
 def make_mimic_keep():
-    runs = 4
+    runs = 10
     suite = TestSuite(0)
     fn = FourPeaks()
-    runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=1500, max_attempts=5))
+    runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=1500, max_attempts=10))
     
     curves = make_curve(suite, runner, dict(keep_pct=[0.05, 0.1, 0.2, 0.3, 0.6]), runs=runs, is_product=False)
     plt.figure()
@@ -146,7 +146,7 @@ def make_mimic_pop():
     runs = 10
     suite = TestSuite(0)
     fn = FourPeaks()
-    runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=2000, max_attempts=8))
+    runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=2000, max_attempts=10))
     
     curves = make_curve(suite, runner, dict(pop_size=[200, 500, 1000, 1500, 2000, 2500, 3000]), runs=runs, is_product=False)
     plt.figure()
