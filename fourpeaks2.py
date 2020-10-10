@@ -59,7 +59,7 @@ def runner(runs, N_):
     suite = TestSuite(0)
     
     fn = FourPeaks()
-    runner = RHCRunner(fn, {'restarts':20,  'argmax_mode':False, max_attempts:8})
+    runner = RHCRunner(fn, {'restarts':20,  'argmax_mode':False, 'max_attempts':8})
     res['RHC'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
