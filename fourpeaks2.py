@@ -8,7 +8,7 @@ from test_harness import *
 
 
 N = 50
-T = 5
+T = 4
 
 def head(state, val):
     idx = np.nonzero(state==val^1)[0]
@@ -48,7 +48,7 @@ def runner(runs, N_):
     global N, T
     
     N = N_
-    T = int(np.ceil(N*0.1))
+    T = int(np.ceil(N*4/50))
     perfect_score = 2*N -T-1
     
     res = {}
