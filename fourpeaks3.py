@@ -8,7 +8,7 @@ from test_harness import *
 
 
 N = 50
-T = 3
+T = 5
 
 def head(state, val):
     idx = np.nonzero(state==val^1)[0]
@@ -22,7 +22,7 @@ def tail(state, val):
     return head(state[::-1], val)
 
 def fn_fitness(state:np.ndarray):
-    head1 = head(state, 1)
+    head1 = min(head(state, 1), T+1)
     tail0 = tail(state, 0)
     
     reward = 0
