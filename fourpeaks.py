@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 N = 50
 T = 5
+K = 0.08
 
 def head(state, val):
     idx = np.nonzero(state==val^1)[0]
@@ -24,8 +25,13 @@ def fn_fitness(state:np.ndarray):
     reward = 0
     if tail0 > T and head1 >T:
         reward = N
-    v = max(tail0, min(head1, T-1))
-    return reward + v
+    
+    threshold = np.floor(T*K)
+    v = max(tail0, min(head1, threshold))
+    
+    charge = 1 if head1 >=T else 0
+    
+    return reward + v -charge + 1
 
 #init_state = np.zeros(N)
 #init_state[0:6]=1
@@ -37,7 +43,7 @@ fitness_cust = mr.CustomFitness(fn_fitness)
 problem_cust = mr.DiscreteOpt(length = N, fitness_fn = fitness_cust, maximize=True, max_val = 2)
 
 
-best_state, best_fitness, curve = mr.random_hill_climb(problem_cust, restarts=10,     random_state = 0, curve=True, argmax_mode=False)
+best_state, best_fitness, curve = mr.random_hill_climb(problem_cust, restarts=10,  max_attempts=50,  random_state = 0, curve=True, argmax_mode=True)
 print("RHC")
 print(best_state)
 print(best_fitness)

@@ -32,8 +32,10 @@ def fn_fitness(state:np.ndarray):
     
     threshold = np.floor(T*K)
     v = max(tail0, min(head1, threshold))
-    
-    return reward + v 
+    e = (1+1e-8)
+        
+    charge = 1 if state[T] else 0
+    return reward + v -charge + 1
 
 
 
@@ -60,7 +62,7 @@ def runner(runs, N_):
     suite = TestSuite(0)
     
     fn = FourPeaks()
-    runner = RHCRunner(fn, {'restarts':20,  'argmax_mode':False, 'max_attempts':8})
+    runner = RHCRunner(fn, {'restarts':20,  'argmax_mode':True, 'max_attempts':8})
     res['RHC'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))

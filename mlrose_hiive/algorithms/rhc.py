@@ -109,7 +109,7 @@ def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
         attempts = 0
         iters = 0
         #ii = 0
-        #l_att = []
+        l_att = []
         while (attempts < max_attempts) and (iters < max_iters):
             iters += 1
             
@@ -132,7 +132,7 @@ def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
                 else:
                     attempts += 1
                 #ii = 0
-                #l_att = [problem.get_state()]
+                l_att.append(problem.get_state())
             else:
                 #if next_fitness==current_fitness:
                 #    ii +=1
