@@ -8,7 +8,7 @@ from test_harness import *
 
 
 N = 50
-T = 4
+T = 5
 
 def head(state, val):
     idx = np.nonzero(state==val^1)[0]
@@ -41,6 +41,7 @@ class FourPeaks(FitnessFunction):
     def get_problem(self):
         fn = mr.CustomFitness(self)
         problem = mr.DiscreteOpt(length = N, fitness_fn=fn, maximize=True)
+        problem.set_mimic_fast_mode(True)
         return problem
 
 
@@ -48,7 +49,7 @@ def runner(runs, N_):
     global N, T
     
     N = N_
-    T = int(np.ceil(N*4/50))
+    T = int(np.ceil(N*5/50))
     perfect_score = 2*N -T-1
     
     res = {}
@@ -83,7 +84,7 @@ def runner(runs, N_):
     
     
     fn = FourPeaks()
-    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=1500, max_attempts=10))
+    runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=2000, max_attempts=10))
     res['MIMIC'] = suite.test(runner, runs)
     printdf(ranks(res), 'ranks')
     printdf(summary_scores(res), "summ")
