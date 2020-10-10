@@ -22,13 +22,13 @@ def tail(state, val):
     return head(state[::-1], val)
 
 def fn_fitness(state:np.ndarray):
-    head1 = min(head(state, 1), T)
+    head1 = head(state, 1)
     tail0 = tail(state, 0)
     
     reward = 0
     if tail0 > T and head1 >T:
         reward = N
-    v = max(tail0, head1)
+    v = max(tail0, min(head1, T))
     return reward + v
 
 
