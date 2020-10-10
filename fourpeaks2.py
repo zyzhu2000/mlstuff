@@ -9,7 +9,7 @@ from test_harness import *
 
 N = 50
 T = 5
-K = 0.08
+K = 0.05
 
 def head(state, val):
     idx = np.nonzero(state==val^1)[0]
@@ -31,7 +31,8 @@ def fn_fitness(state:np.ndarray):
         reward = N
     
     threshold = np.floor(T*K)
-    v = max(tail0, min(head1, threshold))
+    #v = max(tail0, min(head1, threshold))
+    v = tail0 - head1
     return reward + v
 
 

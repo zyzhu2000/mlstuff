@@ -118,8 +118,8 @@ def make_mimic_keep():
     suite = TestSuite(0)
     fn = FourPeaks()
     runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=2000, max_attempts=50))
-    
-    curves = make_curve(suite, runner, dict(keep_pct=[0.05, 0.1, 0.2, 0.3, 0.6]), runs=runs, is_product=False)
+    #, 0.1, 0.2, 0.3, 0.6
+    curves = make_curve(suite, runner, dict(keep_pct=[0.05]), runs=runs, is_product=False)
     plt.figure()
     
     for params in curves:
