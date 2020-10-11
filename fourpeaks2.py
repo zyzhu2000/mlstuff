@@ -30,10 +30,9 @@ def fn_fitness(state:np.ndarray):
     if tail0 > T and head1 >T:
         reward = N
     
-    threshold = T-1
+    threshold = T
     v = max(tail0, min(head1, threshold))
-    #v = max(tail0,head1)
-    charge = state[T]
+
     
     if reward==0 and tail0>=T+1 and head1>0:
         return 1.
@@ -76,8 +75,8 @@ def runner(runs, N_):
     
     
     fn = FourPeaks()
-    runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=2, decay=0.9),  
-                                max_attempts = 400, max_iters = 1000))
+    runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=1, decay=0.999),  
+                                max_attempts = 600, max_iters = 1000))
     res['SA'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
@@ -95,7 +94,7 @@ def runner(runs, N_):
     
     
     fn = FourPeaks()
-    runner = MIMICRunner(fn, dict(keep_pct=0.05, pop_size=2000, max_attempts=10))
+    runner = MIMICRunner(fn, dict(keep_pct=0.1, pop_size=3000, max_attempts=10))
     res['MIMIC'] = suite.test(runner, runs)
     printdf(ranks(res), 'ranks')
     printdf(summary_scores(res), "summ")
