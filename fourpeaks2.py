@@ -76,7 +76,7 @@ def runner(runs, N_):
     
     fn = FourPeaks()
     runner = SARunner(fn, dict(schedule = mr.GeomDecay(init_temp=1, decay=0.999),  
-                                max_attempts = 600, max_iters = 1000))
+                                max_attempts = 600, max_iters = 10000))
     res['SA'] = suite.test(runner, runs)
     print(ranks(res))
     print(summary_scores(res))
