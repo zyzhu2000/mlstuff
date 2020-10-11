@@ -27,7 +27,7 @@ def fn_fitness(state:np.ndarray):
     tail0 = tail(state, 0)
     
     reward = 0
-    if tail0 > T+1 and head1 >T:
+    if tail0 > T and head1 >T:
         reward = N
     
     threshold = np.floor(T*K)
