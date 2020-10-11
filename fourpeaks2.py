@@ -30,12 +30,17 @@ def fn_fitness(state:np.ndarray):
     if tail0 > T and head1 >T:
         reward = N
     
-    threshold = np.floor(T*K)
+    threshold = T-1
     v = max(tail0, min(head1, threshold))
-    e = (1+1e-8)
+    #v = max(tail0,head1)
+    charge = state[T]
+    
+    if reward==0 and tail0>=T+1 and head1>0:
+        return 1.
         
-    charge = 1 if state[T] else 0
-    return reward + v -charge + 1
+    
+    #return reward + v -charge + 1
+    return reward + v
 
 
 

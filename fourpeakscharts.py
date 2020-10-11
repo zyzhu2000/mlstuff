@@ -147,7 +147,7 @@ def make_mimic_keep():
     runs = 10
     suite = TestSuite(0)
     fn = FourPeaks()
-    runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=1500, max_attempts=10))
+    runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=2000, max_attempts=20))
     
     curves = make_curve(suite, runner, dict(keep_pct=[0.05, 0.1, 0.2, 0.3, 0.6]), runs=runs, is_product=False, extend=True)
     plt.figure()
@@ -178,7 +178,7 @@ def make_mimic_pop():
     fn = FourPeaks()
     runner = MIMICRunner(fn, dict(keep_pct=0.2, pop_size=2000, max_attempts=10))
     
-    curves = make_curve(suite, runner, dict(pop_size=[200, 500, 1000, 1500, 2000, 2500, 3000]), runs=runs, is_product=False, extend=True)
+    curves = make_curve(suite, runner, dict(pop_size=[2000, 2500, 3000]), runs=runs, is_product=False, extend=True)
     plt.figure()
     
     for params in curves:
@@ -206,7 +206,7 @@ def make_mimic_pop():
 #make_4peaks_restarts()
 #make_sa_params()
 #make_sa_params2()
-make_ga_mate()
-make_ga_mutation()
-#make_mimic_keep()
+#make_ga_mate()
+#make_ga_mutation()
+make_mimic_keep()
 #make_mimic_pop()
