@@ -214,10 +214,10 @@ def make_mimic_pop():
     if g_interactive:
         plt.show()
 
-#make_rhc_restarts()
-#make_sa_params()
-#make_sa_attempts()
-#make_ga_mate()
+make_rhc_restarts()
+make_sa_params()
+make_sa_attempts()
+make_ga_mate()
 make_ga_mutation()
-#make_mimic_keep()
-#make_mimic_pop()
+make_mimic_keep()
+make_mimic_pop()
